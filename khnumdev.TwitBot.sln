@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot", "Khnumdev.TwitBot\Khnumdev.TwitBot.csproj", "{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sources", "sources", "{12B217B8-6E04-4CB6-8D99-52EDA0E7EE61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot", "src\Khnumdev.TwitBot\Khnumdev.TwitBot.csproj", "{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4} = {12B217B8-6E04-4CB6-8D99-52EDA0E7EE61}
 	EndGlobalSection
 EndGlobal
