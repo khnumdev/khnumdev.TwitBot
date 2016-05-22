@@ -1,19 +1,30 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Description;
-using Microsoft.Bot.Connector;
-using Microsoft.Bot.Connector.Utilities;
-using Newtonsoft.Json;
-
-namespace Khnumdev.TwitBot
+﻿namespace Khnumdev.TwitBot
 {
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using Microsoft.Bot.Connector;
+    using Microsoft.Bot.Connector.Utilities;
+    using Newtonsoft.Json;
+    using Khnumdev.TwitBot.Services;
+    using System.Collections.Generic;
+
     [BotAuthentication]
     public class MessagesController : ApiController
     {
+        readonly TwitterServiceProvider _twitterServiceProvider;
+        readonly MessageMatcherService _messageMatcherService;
+
+        public MessagesController()
+        {
+            _twitterServiceProvider = new TwitterServiceProvider();
+            _messageMatcherService = new MessageMatcherService();
+        }
+
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -24,9 +35,17 @@ namespace Khnumdev.TwitBot
             {
                 // calculate something for us to return
                 int length = (message.Text ?? string.Empty).Length;
+                List<string> messages = null;
+
+                if (!_messageMatcherService.HasMessages)
+                {
+                    messages = _twitterServiceProvider.GetTweetsFrom(string.Empty);
+                }
+
+                var selectedResponse = _messageMatcherService.Match(message.Text, messages);
 
                 // return our reply to the user
-                return message.CreateReplyMessage($"You sent {length} characters");
+                return message.CreateReplyMessage(selectedResponse);
             }
             else
             {

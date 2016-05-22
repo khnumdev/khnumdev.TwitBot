@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/Khnumdev.TwitBot/Configurations/Settings.config
