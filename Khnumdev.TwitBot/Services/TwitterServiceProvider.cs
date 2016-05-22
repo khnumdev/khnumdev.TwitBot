@@ -37,7 +37,7 @@
                 .ToList());
 
             // Paginate if there are more tweets to load
-            while (tweets.Any())
+            while (tweets.Count() > 1)
             {
                 var lastId = tweets
                     .Min(i => i.Id);

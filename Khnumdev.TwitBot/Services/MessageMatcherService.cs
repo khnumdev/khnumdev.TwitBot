@@ -27,7 +27,7 @@
 
             return _messages
                 .Where(i => i.Contains(input))
-                .First();
+                .FirstOrDefault();
         }
     }
 }

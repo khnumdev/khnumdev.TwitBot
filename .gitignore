@@ -244,3 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /Khnumdev.TwitBot/Configurations/Settings.config
+/Khnumdev.TwitBot/Properties/PublishProfiles/twitbot - Web Deploy.pubxml

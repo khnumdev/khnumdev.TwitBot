@@ -1,18 +1,11 @@
 ﻿namespace Khnumdev.TwitBot
 {
-    using System;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
+    using Services;
+    using Microsoft.Bot.Connector;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using System.Web.Http.Description;
-    using Microsoft.Bot.Connector;
-    using Microsoft.Bot.Connector.Utilities;
-    using Newtonsoft.Json;
-    using Khnumdev.TwitBot.Services;
-    using System.Collections.Generic;
-
+    using System;
     [BotAuthentication]
     public class MessagesController : ApiController
     {
@@ -25,24 +18,34 @@
             _messageMatcherService = new MessageMatcherService();
         }
 
+        [HttpPost]
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
         public async Task<Message> Post([FromBody]Message message)
         {
+            string selectedResponse = default(string);
+
             if (message.Type == "Message")
             {
                 // calculate something for us to return
                 int length = (message.Text ?? string.Empty).Length;
                 List<string> messages = null;
 
-                if (!_messageMatcherService.HasMessages)
+                try
                 {
-                    messages = _twitterServiceProvider.GetTweetsFrom(string.Empty);
-                }
+                    if (!_messageMatcherService.HasMessages)
+                    {
+                        messages = _twitterServiceProvider.GetTweetsFrom(string.Empty);
+                    }
 
-                var selectedResponse = _messageMatcherService.Match(message.Text, messages);
+                    selectedResponse = _messageMatcherService.Match(message.Text, messages);
+                }
+                catch (Exception)
+                {
+                    selectedResponse = "agghhhh";
+                }
 
                 // return our reply to the user
                 return message.CreateReplyMessage(selectedResponse);
