@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sources", "sources", "{12B2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot", "src\Khnumdev.TwitBot\Khnumdev.TwitBot.csproj", "{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot.Data", "src\Khnumdev.TwitBot.Data\Khnumdev.TwitBot.Data.csproj", "{69C69AFA-295B-44FB-AD31-36686DB5AC9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot.TwitterIngestion", "Khnumdev.TwitBot.TwitterIngestion\Khnumdev.TwitBot.TwitterIngestion.csproj", "{D8F02C3C-B435-4D97-8DEA-F668F60FDE3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,11 +21,20 @@ Global
 		{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69C69AFA-295B-44FB-AD31-36686DB5AC9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69C69AFA-295B-44FB-AD31-36686DB5AC9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69C69AFA-295B-44FB-AD31-36686DB5AC9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69C69AFA-295B-44FB-AD31-36686DB5AC9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F02C3C-B435-4D97-8DEA-F668F60FDE3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F02C3C-B435-4D97-8DEA-F668F60FDE3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F02C3C-B435-4D97-8DEA-F668F60FDE3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F02C3C-B435-4D97-8DEA-F668F60FDE3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A8BA1066-5695-4D71-ABB4-65E5A5E0C3D4} = {12B217B8-6E04-4CB6-8D99-52EDA0E7EE61}
+		{69C69AFA-295B-44FB-AD31-36686DB5AC9F} = {12B217B8-6E04-4CB6-8D99-52EDA0E7EE61}
 	EndGlobalSection
 EndGlobal

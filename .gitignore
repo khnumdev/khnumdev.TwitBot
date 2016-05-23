@@ -247,3 +247,5 @@ ModelManifest.xml
 /Khnumdev.TwitBot/Properties/PublishProfiles/twitbot - Web Deploy.pubxml
 /src/Khnumdev.TwitBot/Configurations/Settings.config
 /src/Khnumdev.TwitBot/Properties/PublishProfiles/twitbot - Web Deploy.pubxml
+/Khnumdev.TwitBot.TwitterIngestion/Properties/PublishProfiles/twitbot - Web Deploy.pubxml
+/src/Khnumdev.TwitBot/Configurations/Connections.config
