@@ -1,21 +1,19 @@
 ﻿namespace Khnumdev.TwitBot
 {
-    using Services;
     using Microsoft.Bot.Connector;
-    using System.Collections.Generic;
+    using Services;
+    using System;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using System;
+
     [BotAuthentication]
     public class MessagesController : ApiController
     {
-        readonly TwitterServiceProvider _twitterServiceProvider;
-        readonly MessageMatcherService _messageMatcherService;
+        readonly IMessageMatcherProcessor _messageMatcherProcessor;
 
-        public MessagesController()
+        public MessagesController(IMessageMatcherProcessor messageMatcherProcesor)
         {
-            _twitterServiceProvider = new TwitterServiceProvider();
-            _messageMatcherService = new MessageMatcherService();
+            _messageMatcherProcessor = messageMatcherProcesor;
         }
 
         [HttpPost]
@@ -31,18 +29,12 @@
             {
                 // calculate something for us to return
                 int length = (message.Text ?? string.Empty).Length;
-                List<string> messages = null;
 
                 try
                 {
-                    if (!_messageMatcherService.HasMessages)
-                    {
-                        messages = _twitterServiceProvider.GetTweetsFrom(string.Empty);
-                    }
-
-                    selectedResponse = _messageMatcherService.Match(message.Text, messages);
+                    selectedResponse = await _messageMatcherProcessor.ProcessAsync(message.Text);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     selectedResponse = "agghhhh";
                 }

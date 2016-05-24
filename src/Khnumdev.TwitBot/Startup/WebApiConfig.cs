@@ -29,6 +29,9 @@
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // Unity dependencies
+            UnityConfig.Configure(config);
         }
     }
 }
