@@ -1,6 +1,7 @@
 ﻿namespace Khnumdev.TwitBot.Data.Model
 {
     using System;
+    using System.Collections.Generic;
 
     public class QueueChat
     {
@@ -27,5 +28,8 @@
         public string Response { get; set; }
 
         public string Error { get; set; }
+        public string ConversationId { get; set; }
+        public string ChannelId { get; set; }
+        public IList<string> HashTags { get; set; }
     }
 }

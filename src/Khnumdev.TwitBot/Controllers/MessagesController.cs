@@ -39,6 +39,9 @@
                 MessageType = message.Type,
                 SourceLanguage = message.SourceLanguage,
                 DestinationLanguage = message.Language,
+                ConversationId = message.ConversationId,
+                ChannelId = message.From.ChannelId,
+                HashTags = message.Hashtags
             };
 
             Message response = null;
