@@ -33,10 +33,16 @@
             var random = new Random();
 
             var messages = _messages
-                .Where(i => i.ToLowerInvariant().Contains(input.ToLowerInvariant()))
+                .Select(i =>
+                new
+                {
+                    Message = i,
+                    Value = CalculatePharseCoincidence(input, i)
+                })
+                .OrderByDescending(i => i.Value)
                 .ToList();
 
-            return messages.Any() ? messages[random.Next(0, messages.Count)] : "traca";
+            return messages.Select(i => i.Message).FirstOrDefault();
         }
 
         /// <summary>
@@ -45,12 +51,17 @@
         /// <param name="input"></param>
         /// <param name="tweet"></param>
         /// <returns></returns>
-        //float CalculatePharseCoincidence(string input, string tweet)
-        //{
-        //    var splittedInput = input.Split(' ').Distinct();
-        //    var spllitedTweet = tweet.Split(' ').Distinct();
+        float CalculatePharseCoincidence(string input, string tweet)
+        {
+            var splittedInput = input.Split(' ').Distinct();
+            var spllitedTweet = tweet.Split(' ').Distinct();
 
-        //    var numberOfMatchedWords = spllitedTweet.Where( i => i)
-        //}
+            var numberOfMatchedWords = spllitedTweet
+                .Where(i => splittedInput.Contains(i.ToLowerInvariant()))
+                .Count();
+
+            return numberOfMatchedWords;
+            //return numberOfMatchedWords != 0 ? spllitedTweet.Count() / numberOfMatchedWords : 0f;
+        }
     }
 }
