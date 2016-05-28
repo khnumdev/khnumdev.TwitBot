@@ -28,21 +28,7 @@
         /// </summary>
         public async Task<Message> Post([FromBody]Message message)
         {
-            var chat = new QueueChat
-            {
-                RequestTime = DateTime.UtcNow,
-                From = message.From.Name,
-                IsRequestFromBot = message.From.IsBot,
-                RequestAddress = message.From.Address,
-                Request = message.Text,
-                To = message.To.Name,
-                MessageType = message.Type,
-                SourceLanguage = message.SourceLanguage,
-                DestinationLanguage = message.Language,
-                ConversationId = message.ConversationId,
-                ChannelId = message.From.ChannelId,
-                HashTags = message.Hashtags
-            };
+            var chat = CreateChatFromMessage(message);
 
             Message response = null;
 
@@ -76,7 +62,7 @@
             return response;
         }
 
-        private Message HandleSystemMessage(Message message)
+        Message HandleSystemMessage(Message message)
         {
             if (message.Type == "Ping")
             {
@@ -106,6 +92,25 @@
             }
 
             return null;
+        }
+
+        QueueChat CreateChatFromMessage(Message message)
+        {
+            return new QueueChat
+            {
+                RequestTime = DateTime.UtcNow,
+                From = message.From.Name,
+                IsRequestFromBot = message.From.IsBot,
+                RequestAddress = message.From.Address,
+                Request = message.Text,
+                To = message.To.Name,
+                MessageType = message.Type,
+                SourceLanguage = message.SourceLanguage,
+                DestinationLanguage = message.Language,
+                ConversationId = message.ConversationId,
+                ChannelId = message.From.ChannelId,
+                HashTags = message.Hashtags
+            };
         }
     }
 }
