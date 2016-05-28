@@ -152,7 +152,7 @@
     <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Khnumdev.TwitBot.Data\Khnumdev.TwitBot.Data.csproj">
+    <ProjectReference Include="..\Khnumdev.TwitBot.Data\Khnumdev.TwitBot.Data.csproj">
       <Project>{69c69afa-295b-44fb-ad31-36686db5ac9f}</Project>
       <Name>Khnumdev.TwitBot.Data</Name>
     </ProjectReference>

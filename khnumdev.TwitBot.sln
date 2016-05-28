@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot", "src\Khn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot.Data", "src\Khnumdev.TwitBot.Data\Khnumdev.TwitBot.Data.csproj", "{69C69AFA-295B-44FB-AD31-36686DB5AC9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot.TwitterIngestion", "Khnumdev.TwitBot.TwitterIngestion\Khnumdev.TwitBot.TwitterIngestion.csproj", "{D8F02C3C-B435-4D97-8DEA-F668F60FDE3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khnumdev.TwitBot.TwitterIngestion", "src\Khnumdev.TwitBot.TwitterIngestion\Khnumdev.TwitBot.TwitterIngestion.csproj", "{D8F02C3C-B435-4D97-8DEA-F668F60FDE3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
