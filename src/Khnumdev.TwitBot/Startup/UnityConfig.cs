@@ -12,6 +12,7 @@
             var container = new UnityContainer();
             container.RegisterType<ITwitterRepository, TwitterRepository>(new HierarchicalLifetimeManager());
             container.RegisterType<IMessageMatcherProcessor, MessageMatcherProcessor>(new HierarchicalLifetimeManager());
+            container.RegisterType<IChatRepository, ChatRepository>(new HierarchicalLifetimeManager());
 
             config.DependencyResolver = new UnityResolver(container);
 

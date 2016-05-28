@@ -37,7 +37,20 @@
                 .ToList();
 
             return messages.Any() ? messages[random.Next(0, messages.Count)] : "traca";
-
         }
+
+        /// <summary>
+        /// Best match returns 1
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="tweet"></param>
+        /// <returns></returns>
+        //float CalculatePharseCoincidence(string input, string tweet)
+        //{
+        //    var splittedInput = input.Split(' ').Distinct();
+        //    var spllitedTweet = tweet.Split(' ').Distinct();
+
+        //    var numberOfMatchedWords = spllitedTweet.Where( i => i)
+        //}
     }
 }

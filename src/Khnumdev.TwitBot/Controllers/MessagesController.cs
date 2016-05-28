@@ -1,5 +1,7 @@
 ﻿namespace Khnumdev.TwitBot
 {
+    using Data.Model;
+    using Data.Repositories;
     using Microsoft.Bot.Connector;
     using Services;
     using System;
@@ -10,10 +12,13 @@
     public class MessagesController : ApiController
     {
         readonly IMessageMatcherProcessor _messageMatcherProcessor;
+        readonly IChatRepository _chatRepository;
 
-        public MessagesController(IMessageMatcherProcessor messageMatcherProcesor)
+        public MessagesController(IMessageMatcherProcessor messageMatcherProcesor,
+            IChatRepository chatRepository)
         {
             _messageMatcherProcessor = messageMatcherProcesor;
+            _chatRepository = chatRepository;
         }
 
         [HttpPost]
@@ -23,29 +28,49 @@
         /// </summary>
         public async Task<Message> Post([FromBody]Message message)
         {
-            string selectedResponse = default(string);
-
-            if (message.Type == "Message")
+            var chat = new QueueChat
             {
-                // calculate something for us to return
-                int length = (message.Text ?? string.Empty).Length;
+                RequestTime = DateTime.UtcNow,
+                From = message.From.Name,
+                IsRequestFromBot = message.From.IsBot,
+                RequestAddress = message.From.Address,
+                Request = message.Text,
+                To = message.To.Name,
+                MessageType = message.Type,
+                SourceLanguage = message.SourceLanguage,
+                DestinationLanguage = message.Language,
+            };
 
-                try
-                {
-                    selectedResponse = await _messageMatcherProcessor.ProcessAsync(message.Text);
-                }
-                catch (Exception ex)
-                {
-                    selectedResponse = "agghhhh";
-                }
+            Message response = null;
 
-                // return our reply to the user
-                return message.CreateReplyMessage(selectedResponse);
-            }
-            else
+            try
             {
-                return HandleSystemMessage(message);
+                if (message.Type == "Message")
+                {
+                    var selectedResponse = await _messageMatcherProcessor.ProcessAsync(message.Text);
+
+                    chat.Response = selectedResponse;
+                    chat.ResponseTime = DateTime.UtcNow;
+
+                    // return our reply to the user
+                    response = message.CreateReplyMessage(selectedResponse);
+                }
+                else
+                {
+                    response = HandleSystemMessage(message);
+                }
             }
+            catch (Exception ex)
+            {
+                chat.Error = ex.ToString();
+                response = message.CreateReplyMessage("ough!");
+            }
+            finally
+            {
+                await _chatRepository.EnqeueChatAsync(chat);
+            }
+
+            return response;
         }
 
         private Message HandleSystemMessage(Message message)
