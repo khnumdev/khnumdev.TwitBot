@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     public class MessageMatcherProcessor : IMessageMatcherProcessor
@@ -71,8 +72,12 @@
 
         string SanitizeTweet(string tweet)
         {
-            return tweet.Replace("@", " ")
-                .Replace("_", " ");
+            var regex = @"@(\w+)";
+            var regexMatch = new Regex(regex);
+            var filteredWithoutUsername = regexMatch.Replace(tweet, string.Empty);
+            return filteredWithoutUsername.Replace("@", " ")
+                .Replace("_", " ")
+                .TrimStart();
         }
     }
 }
