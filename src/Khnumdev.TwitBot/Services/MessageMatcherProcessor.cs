@@ -42,7 +42,7 @@
                 .Select(i =>
                 new
                 {
-                    Message = SanitizeTweet(i.Text),
+                    Message = SanitizeTweet(i.Text, true),
                     Value = CalculatePharseCoincidence(keyPhrases, i.KeyPhrases)
                 })
                 .GroupBy(i => i.Value, i => i)
@@ -60,7 +60,12 @@
         /// <returns></returns>
         int CalculatePharseCoincidence(string keyPhrases, string tweetKeyPhrases)
         {
-            var splitedTweetPhrases = SanitizeTweet(tweetKeyPhrases).ToLowerInvariant().Replace(',', ' ').Split(' ').Distinct();
+            var splitedTweetPhrases = SanitizeTweet(tweetKeyPhrases, false)
+                .ToLowerInvariant()
+                .Replace(',', ' ')
+                .Split(' ')
+                .Distinct();
+
             var splittedKeyPhrases = keyPhrases.ToLowerInvariant().Split(' ').Distinct();
 
             var numberOfMatchedWords = splitedTweetPhrases
@@ -70,12 +75,18 @@
             return numberOfMatchedWords;
         }
 
-        string SanitizeTweet(string tweet)
+        string SanitizeTweet(string tweet, bool removeUsername)
         {
-            var regex = @"@(\w+)";
-            var regexMatch = new Regex(regex);
-            var filteredWithoutUsername = regexMatch.Replace(tweet, string.Empty);
-            return filteredWithoutUsername.Replace("@", " ")
+            string result = tweet;
+
+            if (removeUsername)
+            {
+                var regex = @"@(\w+)";
+                var regexMatch = new Regex(regex);
+                result = regexMatch.Replace(tweet, string.Empty);
+            }
+
+            return result.Replace("@", " ")
                 .Replace("_", " ")
                 .TrimStart();
         }
