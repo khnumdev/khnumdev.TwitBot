@@ -168,7 +168,6 @@
     <Content Include="Configurations\Settings.config" />
     <Content Include="Configurations\Connections.config" />
     <None Include="Properties\PublishProfiles\twitbot - Web Deploy.pubxml" />
-    <Content Include="Properties\webjobs-list.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

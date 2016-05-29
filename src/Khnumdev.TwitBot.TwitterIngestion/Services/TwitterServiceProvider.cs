@@ -88,7 +88,13 @@
 
         Tweet ParseFromTwitterStatus(int userId, TwitterStatus twitterStatus)
         {
-            return new Tweet { Text = twitterStatus.Text, TweetId = twitterStatus.Id, TwitterUserId = userId };
+            return new Tweet
+            {
+                Text = twitterStatus.Text,
+                TweetId = twitterStatus.Id,
+                TwitterUserId = userId,
+                IsReply = twitterStatus.InReplyToUserId.HasValue
+            };
         }
 
         ListTweetsOnUserTimelineOptions CreateTimeLineOptions(long userId, long? sinceId, long? lastId)
@@ -96,7 +102,7 @@
             return new ListTweetsOnUserTimelineOptions
             {
                 UserId = userId,
-                ExcludeReplies = true,
+                ExcludeReplies = false,
                 Count = 1000,
                 ContributorDetails = false,
                 IncludeRts = false,

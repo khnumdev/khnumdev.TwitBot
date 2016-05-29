@@ -15,5 +15,7 @@
         public string KeyPhrases { get; set; }
 
         public float? Sentiment { get; set; }
+
+        public bool IsReply { get; set; }
     }
 }

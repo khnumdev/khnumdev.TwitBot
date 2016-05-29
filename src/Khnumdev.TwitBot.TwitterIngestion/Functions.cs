@@ -15,7 +15,7 @@
             var twitterServiceProvider = unityContainer.Resolve<ITwitterServiceProvider>();
             var twitterAnalyzer = unityContainer.Resolve<ITwitterAnalyzer>();
 
-            //await twitterServiceProvider.LoadIntoDatabaseAsync();
+            await twitterServiceProvider.LoadIntoDatabaseAsync();
             await twitterAnalyzer.CheckPendingTweets();
         }
     }

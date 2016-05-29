@@ -95,6 +95,10 @@
     <Compile Include="Migrations\201605282049030_AddMoreLengthForKeyPhrases.Designer.cs">
       <DependentUpon>201605282049030_AddMoreLengthForKeyPhrases.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605291928369_AddReplyField.cs" />
+    <Compile Include="Migrations\201605291928369_AddReplyField.Designer.cs">
+      <DependentUpon>201605291928369_AddReplyField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Datawarehouse\Channel.cs" />
     <Compile Include="Model\Datawarehouse\Date.cs" />
@@ -112,7 +116,6 @@
     <Compile Include="TwitBotContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +127,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605282049030_AddMoreLengthForKeyPhrases.resx">
       <DependentUpon>201605282049030_AddMoreLengthForKeyPhrases.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605291928369_AddReplyField.resx">
+      <DependentUpon>201605291928369_AddReplyField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
