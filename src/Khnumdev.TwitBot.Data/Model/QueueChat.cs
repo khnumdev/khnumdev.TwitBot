@@ -31,5 +31,9 @@
         public string ConversationId { get; set; }
         public string ChannelId { get; set; }
         public IList<string> HashTags { get; set; }
+
+        public float Sentiment { get; set; }
+
+        public List<string> KeyPhrases { get; set; }
     }
 }

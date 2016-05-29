@@ -87,7 +87,20 @@
     <Compile Include="Migrations\201605230017465_Initial-Migration.Designer.cs">
       <DependentUpon>201605230017465_Initial-Migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605282040095_AddedAnalysisMetricsForTweets.cs" />
+    <Compile Include="Migrations\201605282040095_AddedAnalysisMetricsForTweets.Designer.cs">
+      <DependentUpon>201605282040095_AddedAnalysisMetricsForTweets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605282049030_AddMoreLengthForKeyPhrases.cs" />
+    <Compile Include="Migrations\201605282049030_AddMoreLengthForKeyPhrases.Designer.cs">
+      <DependentUpon>201605282049030_AddMoreLengthForKeyPhrases.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Datawarehouse\Channel.cs" />
+    <Compile Include="Model\Datawarehouse\Date.cs" />
+    <Compile Include="Model\Datawarehouse\Language.cs" />
+    <Compile Include="Model\Datawarehouse\MessageType.cs" />
+    <Compile Include="Model\Datawarehouse\User.cs" />
     <Compile Include="Model\QueueChat.cs" />
     <Compile Include="Model\Tweet.cs" />
     <Compile Include="Model\TwitterUser.cs" />
@@ -105,6 +118,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201605230017465_Initial-Migration.resx">
       <DependentUpon>201605230017465_Initial-Migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605282040095_AddedAnalysisMetricsForTweets.resx">
+      <DependentUpon>201605282040095_AddedAnalysisMetricsForTweets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605282049030_AddMoreLengthForKeyPhrases.resx">
+      <DependentUpon>201605282049030_AddMoreLengthForKeyPhrases.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

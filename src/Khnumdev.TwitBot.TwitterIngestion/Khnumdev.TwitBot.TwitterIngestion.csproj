@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -132,17 +132,19 @@
     <Compile Include="Program.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ITwitterAnalyzer.cs" />
     <Compile Include="Services\ITwitterServiceProvider.cs" />
+    <Compile Include="Services\TwitterAnalyzer.cs" />
     <Compile Include="Services\TwitterServiceProvider.cs" />
     <Compile Include="Startup\JobFactory.cs" />
     <Compile Include="Startup\UnityResolver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\src\Khnumdev.TwitBot\Configurations\Connections.config">
+    <Content Include="..\Khnumdev.TwitBot\Configurations\Connections.config">
       <Link>Configurations\Connections.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\src\Khnumdev.TwitBot\Configurations\Settings.config">
+    <Content Include="..\Khnumdev.TwitBot\Configurations\Settings.config">
       <Link>Configurations\Settings.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -152,6 +154,10 @@
     <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\khnumdev.TwitBot.Core\Khnumdev.TwitBot.Core.csproj">
+      <Project>{06FD730E-5C02-449D-95D1-F4551E1E973C}</Project>
+      <Name>Khnumdev.TwitBot.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Khnumdev.TwitBot.Data\Khnumdev.TwitBot.Data.csproj">
       <Project>{69c69afa-295b-44fb-ad31-36686db5ac9f}</Project>
       <Name>Khnumdev.TwitBot.Data</Name>
@@ -170,7 +176,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.9\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.9\tools\webjobs.targets')" />
+  <Import Project="..\..\packages\Microsoft.Web.WebJobs.Publish.1.0.9\tools\webjobs.targets" Condition="Exists('..\..\packages\Microsoft.Web.WebJobs.Publish.1.0.9\tools\webjobs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

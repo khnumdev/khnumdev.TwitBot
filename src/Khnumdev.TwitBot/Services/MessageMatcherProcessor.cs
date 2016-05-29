@@ -1,5 +1,7 @@
 ﻿namespace Khnumdev.TwitBot.Services
 {
+    using Core.TextAnalyzer.Model;
+    using Data.Model;
     using Data.Repositories;
     using System;
     using System.Collections.Generic;
@@ -11,7 +13,7 @@
     {
         const string USER_ID = "TwitterUserId";
 
-        static List<string> _messages;
+        static List<Tweet> _messages;
 
         readonly ITwitterRepository _twitterRepository;
         readonly long _userId;
@@ -22,46 +24,55 @@
             _userId = long.Parse(ConfigurationManager.AppSettings[USER_ID]);
         }
 
-        public async Task<string> ProcessAsync(string input)
+        public async Task<string> ProcessAsync(AnalysisResult result, string input)
         {
             if (_messages == null)
             {
                 _messages = await _twitterRepository
-                    .GetMessagesFromAsync(_userId);
+                    .GetTweetContentFromAsync(_userId);
             }
 
             var random = new Random();
 
+            var keyPhrases = string.Join(" ", result.KeyPhrases);
+
             var messages = _messages
+                .Where(i => i.KeyPhrases != null)
                 .Select(i =>
                 new
                 {
-                    Message = i,
-                    Value = CalculatePharseCoincidence(input, i)
+                    Message = SanitizeTweet(i.Text),
+                    Value = CalculatePharseCoincidence(keyPhrases, i.KeyPhrases)
                 })
-                .OrderByDescending(i => i.Value)
-                .ToList();
+                .GroupBy(i => i.Value, i => i)
+                .OrderByDescending(i => i.Key)
+                .First();
 
-            return messages.Select(i => i.Message).FirstOrDefault();
+            return messages.ElementAt(random.Next(0, messages.Count() - 1)).Message;
         }
 
         /// <summary>
         /// Best match returns 1
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="tweet"></param>
+        /// <param name="tweetKeyPhrases"></param>
         /// <returns></returns>
-        float CalculatePharseCoincidence(string input, string tweet)
+        int CalculatePharseCoincidence(string keyPhrases, string tweetKeyPhrases)
         {
-            var splittedInput = input.Split(' ').Distinct();
-            var spllitedTweet = tweet.Split(' ').Distinct();
+            var splitedTweetPhrases = SanitizeTweet(tweetKeyPhrases).ToLowerInvariant().Replace(',', ' ').Split(' ').Distinct();
+            var splittedKeyPhrases = keyPhrases.ToLowerInvariant().Split(' ').Distinct();
 
-            var numberOfMatchedWords = spllitedTweet
-                .Where(i => splittedInput.Contains(i.ToLowerInvariant()))
+            var numberOfMatchedWords = splitedTweetPhrases
+                .Where(i => splittedKeyPhrases.Contains(i))
                 .Count();
 
             return numberOfMatchedWords;
-            //return numberOfMatchedWords != 0 ? spllitedTweet.Count() / numberOfMatchedWords : 0f;
+        }
+
+        string SanitizeTweet(string tweet)
+        {
+            return tweet.Replace("@", " ")
+                .Replace("_", " ");
         }
     }
 }

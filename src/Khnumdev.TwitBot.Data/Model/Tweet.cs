@@ -11,5 +11,9 @@
         public int TwitterUserId { get; set; }
 
         public virtual TwitterUser TwitterUser { get; set; }
+
+        public string KeyPhrases { get; set; }
+
+        public float? Sentiment { get; set; }
     }
 }

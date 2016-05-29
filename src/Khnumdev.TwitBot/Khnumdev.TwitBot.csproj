@@ -168,6 +168,7 @@
     <Content Include="Configurations\Settings.config" />
     <Content Include="Configurations\Connections.config" />
     <None Include="Properties\PublishProfiles\twitbot - Web Deploy.pubxml" />
+    <Content Include="Properties\webjobs-list.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -176,11 +177,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\khnumdev.TwitBot.Core\Khnumdev.TwitBot.Core.csproj">
+      <Project>{06fd730e-5c02-449d-95d1-f4551e1e973c}</Project>
+      <Name>Khnumdev.TwitBot.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Khnumdev.TwitBot.Data\Khnumdev.TwitBot.Data.csproj">
       <Project>{69c69afa-295b-44fb-ad31-36686db5ac9f}</Project>
       <Name>Khnumdev.TwitBot.Data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

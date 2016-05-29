@@ -22,15 +22,27 @@
             }
         }
 
-        public async Task<List<string>> GetMessagesFromAsync(long userId)
+        public async Task<List<Tweet>> GetTweetContentFromAsync(long userId)
         {
             using (var context = new TwitBotContext())
             {
-                return await context
+                var tweets = await context
                     .Set<Tweet>()
                     .Where(i => i.TwitterUser.TwitterId == userId)
-                    .Select(i => i.Text)
+                    .Select(i => new
+                    {
+                        Text = i.Text,
+                        KeyPhrases = i.KeyPhrases
+                    })
                     .ToListAsync();
+
+                return tweets
+                    .Select(i => new Tweet
+                    {
+                        KeyPhrases = i.KeyPhrases,
+                        Text = i.Text
+                    })
+                    .ToList();
             }
         }
 
@@ -85,6 +97,33 @@
                        return i;
                    })
                    .ToList();
+
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<Tweet>> GetPendingTweetsToAnalyzeAsync()
+        {
+            using (var context = new TwitBotContext())
+            {
+                var tweets = await context
+                     .Set<Tweet>()
+                     .Where(i => i.KeyPhrases == null && !i.Sentiment.HasValue)
+                     .Take(100)
+                     .ToListAsync();
+
+                return tweets;
+            }
+        }
+
+        public async Task UpdateAsync(List<Tweet> tweets)
+        {
+            using (var context = new TwitBotContext())
+            {
+                foreach (var tweet in tweets)
+                {
+                    context.Entry<Tweet>(tweet).State = EntityState.Modified;
+                }
 
                 await context.SaveChangesAsync();
             }

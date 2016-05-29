@@ -1,5 +1,7 @@
 ﻿namespace Khnumdev.TwitBot
 {
+    using Core.TextAnalyzer.Model;
+    using Core.TextAnalyzer.Services;
     using Data.Model;
     using Data.Repositories;
     using Microsoft.Bot.Connector;
@@ -13,12 +15,15 @@
     {
         readonly IMessageMatcherProcessor _messageMatcherProcessor;
         readonly IChatRepository _chatRepository;
+        readonly ITextAnalyzerService _textAnalyzerService;
 
         public MessagesController(IMessageMatcherProcessor messageMatcherProcesor,
-            IChatRepository chatRepository)
+            IChatRepository chatRepository,
+            ITextAnalyzerService textAnalyzerService)
         {
             _messageMatcherProcessor = messageMatcherProcesor;
             _chatRepository = chatRepository;
+            _textAnalyzerService = textAnalyzerService;
         }
 
         [HttpPost]
@@ -36,7 +41,13 @@
             {
                 if (message.Type == "Message")
                 {
-                    var selectedResponse = await _messageMatcherProcessor.ProcessAsync(message.Text);
+                    var analyzer = new TextAnalyzerService();
+                    var analysisResult = await analyzer.AnalyzeAsync(message.Text);
+
+                    chat.Sentiment = analysisResult.Sentiment;
+                    chat.KeyPhrases = analysisResult.KeyPhrases;
+
+                    var selectedResponse = await _messageMatcherProcessor.ProcessAsync(analysisResult, message.Text);
 
                     chat.Response = selectedResponse;
                     chat.ResponseTime = DateTime.UtcNow;

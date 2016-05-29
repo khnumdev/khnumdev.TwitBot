@@ -1,5 +1,6 @@
 ﻿namespace Khnumdev.TwitBot.Startup
 {
+    using Core.TextAnalyzer.Services;
     using Data.Repositories;
     using Microsoft.Practices.Unity;
     using Services;
@@ -13,6 +14,7 @@
             container.RegisterType<ITwitterRepository, TwitterRepository>(new HierarchicalLifetimeManager());
             container.RegisterType<IMessageMatcherProcessor, MessageMatcherProcessor>(new HierarchicalLifetimeManager());
             container.RegisterType<IChatRepository, ChatRepository>(new HierarchicalLifetimeManager());
+            container.RegisterType<ITextAnalyzerService, TextAnalyzerService>(new HierarchicalLifetimeManager());
 
             config.DependencyResolver = new UnityResolver(container);
 
