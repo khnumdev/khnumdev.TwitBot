@@ -7,18 +7,24 @@
     using Newtonsoft.Json;
     using System.Configuration;
     using System.Threading.Tasks;
+    using System;
 
     public class ChatRepository : IChatRepository
     {
         const string CHAT_QUEUE_NAME = "chat";
 
-        public async Task EnqeueChatAsync(QueueChat chat)
+        public async Task QeueChatAsync(QueueChat chat)
         {
             var serializedMessage = JsonConvert.SerializeObject(chat);
             var message = new CloudQueueMessage(serializedMessage);
 
             var queue = GetQueue();
             await queue.AddMessageAsync(message);
+        }
+
+        public QueueChat DeserializeFrom(string content)
+        {
+            return JsonConvert.DeserializeObject<QueueChat>(content);
         }
 
         CloudQueue GetQueue()

@@ -1,4 +1,4 @@
-﻿namespace Khnumdev.TwitBot.Data.Model.Datawarehouse
+﻿namespace Khnumdev.TwitBot.Data.DWH.Model.Dimensions
 {
     public class User
     {

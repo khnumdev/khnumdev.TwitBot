@@ -67,7 +67,7 @@
             }
             finally
             {
-                await _chatRepository.EnqeueChatAsync(chat);
+                await _chatRepository.QeueChatAsync(chat);
             }
 
             return response;

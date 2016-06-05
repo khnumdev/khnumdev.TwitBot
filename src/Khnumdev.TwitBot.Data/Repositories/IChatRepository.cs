@@ -5,6 +5,8 @@
 
     public interface IChatRepository
     {
-        Task EnqeueChatAsync(QueueChat chat);
+        Task QeueChatAsync(QueueChat chat);
+
+        QueueChat DeserializeFrom(string content);
     }
 }

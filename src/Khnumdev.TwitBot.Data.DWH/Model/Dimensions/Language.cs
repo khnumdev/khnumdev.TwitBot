@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Khnumdev.TwitBot.Data.Model.Datawarehouse
+namespace Khnumdev.TwitBot.Data.DWH.Model.Dimensions
 {
     class Language
     {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }
