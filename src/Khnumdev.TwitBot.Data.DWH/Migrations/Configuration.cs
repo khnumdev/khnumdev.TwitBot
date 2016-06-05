@@ -20,9 +20,10 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
 
         void PopulateStatus(Khnumdev.TwitBot.Data.DWH.DWHContext context)
         {
-            var messageTypes = new MessageTypeSeed().Generate();
+            var messageTypes = new MessageSourceSeed().Generate();
             var dates = new DateSeed().Generate();
-            context.Set<MessageType>().AddOrUpdate(messageTypes.ToArray());
+
+            context.Set<MessageSource>().AddOrUpdate(messageTypes.ToArray());
 
             if (!context.Set<Date>().Any())
             {

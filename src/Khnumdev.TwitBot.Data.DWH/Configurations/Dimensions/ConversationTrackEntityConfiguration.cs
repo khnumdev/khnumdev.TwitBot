@@ -8,7 +8,7 @@
         public ConversationTrackEntityConfiguration()
         {
             this.Property(i => i.ConversationId)
-                .HasMaxLength(20)
+                .HasMaxLength(75)
                 .IsUnicode();
 
             this.ToTable("DimConversation", "DWH");

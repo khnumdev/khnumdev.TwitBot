@@ -12,7 +12,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    class DWHIngestionService
+    class DWHIngestionService: IDWHIngestionService
     {
         readonly IChatRepository _chatRepository;
         readonly IDWHRepository _dwhRepository;
@@ -33,7 +33,6 @@
             var sourceLanguage = GetSourceLanguageFrom(chat);
             var requestMessage = GetRequestMessageFrom(chat);
             var responseMessage = GetRequestMessageTo(chat);
-            var messageSource = GetMessageSourceFrom(chat);
             var messageType = GetMessageTypeFrom(chat);
             var userFrom = GetUserFrom(chat);
             var userTo = GetUserTo(chat);
@@ -44,7 +43,6 @@
             var requestMessageId = await _dwhRepository.AddAsync(requestMessage);
             var responseMessageId = await _dwhRepository.AddAsync(responseMessage);
             var messageTypeId = await _dwhRepository.AddAsync(messageType);
-            var messageSourceId = await _dwhRepository.AddOrRetrieveIdAsync(messageSource);
             var userFromId = await _dwhRepository.AddOrRetrieveIdAsync(userFrom);
             var userToId = await _dwhRepository.AddOrRetrieveIdAsync(userTo);
 
@@ -134,15 +132,6 @@
                 Date = chat.ResponseTime,
                 LoadedOn = DateTime.UtcNow,
                 User = chat.To
-            };
-        }
-
-        MessageSource GetMessageSourceFrom(QueueChat chat)
-        {
-            return new MessageSource
-            {
-                Source = chat.IsRequestFromBot.HasValue ?
-                chat.IsRequestFromBot.Value ? "Response" : "Request" : string.Empty
             };
         }
 

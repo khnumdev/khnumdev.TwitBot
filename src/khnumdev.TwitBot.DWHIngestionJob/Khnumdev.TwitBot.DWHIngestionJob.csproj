@@ -109,16 +109,17 @@
     <Compile Include="Functions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DWHIngestionService.cs" />
+    <Compile Include="Services\IDWHIngestionService.cs" />
     <Compile Include="Startup\JobFactory.cs" />
     <Compile Include="Startup\UnityResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Khnumdev.TwitBot\Configurations\Connections.config">
-      <Link>Configuration\Connections.config</Link>
+      <Link>Configurations\Connections.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\Khnumdev.TwitBot\Configurations\Settings.config">
-      <Link>Configuration\Settings.config</Link>
+      <Link>Configurations\Settings.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />

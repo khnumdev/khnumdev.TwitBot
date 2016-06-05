@@ -16,11 +16,11 @@
                 .IsUnicode();
 
             this.Property(i => i.ConversationId)
-                .HasMaxLength(20)
+                .HasMaxLength(75)
                 .IsUnicode();
 
             this.Property(i => i.User)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .IsUnicode();
 
             this.ToTable("DimMessage", "DWH");

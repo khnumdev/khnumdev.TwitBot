@@ -8,7 +8,7 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
         public override void Up()
         {
             CreateTable(
-                "DWH.FactUser",
+                "DWH.FactConversation",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -91,7 +91,7 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
                         Content = c.String(maxLength: 150),
                         ConversationId = c.String(maxLength: 20),
                         ChannelId = c.String(maxLength: 20),
-                        User = c.String(maxLength: 20),
+                        User = c.String(maxLength: 50),
                         Date = c.DateTime(nullable: false),
                         LoadedOn = c.DateTime(nullable: false),
                     })
@@ -169,14 +169,14 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
             DropForeignKey("DWH.FactWord", "DateId", "DWH.DimDate");
             DropForeignKey("DWH.FactWord", "ConversationTrackId", "DWH.DimConversation");
             DropForeignKey("DWH.FactWord", "ChannelId", "DWH.DimChannel");
-            DropForeignKey("DWH.FactUser", "ToUserId", "DWH.DimUser");
-            DropForeignKey("DWH.FactUser", "MessageTypeId", "DWH.DimMessageType");
-            DropForeignKey("DWH.FactUser", "MessageSourceId", "DWH.DimMessageSource");
-            DropForeignKey("DWH.FactUser", "MessageId", "DWH.DimMessage");
-            DropForeignKey("DWH.FactUser", "FromUserId", "DWH.DimUser");
-            DropForeignKey("DWH.FactUser", "DateId", "DWH.DimDate");
-            DropForeignKey("DWH.FactUser", "ConversationTrackId", "DWH.DimConversation");
-            DropForeignKey("DWH.FactUser", "ChannelId", "DWH.DimChannel");
+            DropForeignKey("DWH.FactConversation", "ToUserId", "DWH.DimUser");
+            DropForeignKey("DWH.FactConversation", "MessageTypeId", "DWH.DimMessageType");
+            DropForeignKey("DWH.FactConversation", "MessageSourceId", "DWH.DimMessageSource");
+            DropForeignKey("DWH.FactConversation", "MessageId", "DWH.DimMessage");
+            DropForeignKey("DWH.FactConversation", "FromUserId", "DWH.DimUser");
+            DropForeignKey("DWH.FactConversation", "DateId", "DWH.DimDate");
+            DropForeignKey("DWH.FactConversation", "ConversationTrackId", "DWH.DimConversation");
+            DropForeignKey("DWH.FactConversation", "ChannelId", "DWH.DimChannel");
             DropIndex("DWH.FactWord", new[] { "ToUserId" });
             DropIndex("DWH.FactWord", new[] { "FromUserId" });
             DropIndex("DWH.FactWord", new[] { "MessageTypeId" });
@@ -185,14 +185,14 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
             DropIndex("DWH.FactWord", new[] { "DateId" });
             DropIndex("DWH.FactWord", new[] { "ConversationTrackId" });
             DropIndex("DWH.FactWord", new[] { "ChannelId" });
-            DropIndex("DWH.FactUser", new[] { "ToUserId" });
-            DropIndex("DWH.FactUser", new[] { "FromUserId" });
-            DropIndex("DWH.FactUser", new[] { "MessageTypeId" });
-            DropIndex("DWH.FactUser", new[] { "MessageSourceId" });
-            DropIndex("DWH.FactUser", new[] { "MessageId" });
-            DropIndex("DWH.FactUser", new[] { "DateId" });
-            DropIndex("DWH.FactUser", new[] { "ConversationTrackId" });
-            DropIndex("DWH.FactUser", new[] { "ChannelId" });
+            DropIndex("DWH.FactConversation", new[] { "ToUserId" });
+            DropIndex("DWH.FactConversation", new[] { "FromUserId" });
+            DropIndex("DWH.FactConversation", new[] { "MessageTypeId" });
+            DropIndex("DWH.FactConversation", new[] { "MessageSourceId" });
+            DropIndex("DWH.FactConversation", new[] { "MessageId" });
+            DropIndex("DWH.FactConversation", new[] { "DateId" });
+            DropIndex("DWH.FactConversation", new[] { "ConversationTrackId" });
+            DropIndex("DWH.FactConversation", new[] { "ChannelId" });
             DropTable("DWH.DimLanguage");
             DropTable("DWH.FactWord");
             DropTable("DWH.DimMessageType");
@@ -202,7 +202,7 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
             DropTable("DWH.DimDate");
             DropTable("DWH.DimConversation");
             DropTable("DWH.DimChannel");
-            DropTable("DWH.FactUser");
+            DropTable("DWH.FactConversation");
         }
     }
 }

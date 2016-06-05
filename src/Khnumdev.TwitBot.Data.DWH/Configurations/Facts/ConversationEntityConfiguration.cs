@@ -41,7 +41,7 @@
                .HasForeignKey(i => i.ToUserId)
                .WillCascadeOnDelete(false);
 
-            this.ToTable("FactUser", "DWH");
+            this.ToTable("FactConversation", "DWH");
         }
     }
 }

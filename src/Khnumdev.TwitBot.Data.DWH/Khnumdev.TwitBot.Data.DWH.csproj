@@ -69,9 +69,17 @@
     <Compile Include="Configurations\Facts\WordEntityConfiguration.cs" />
     <Compile Include="DWHContext.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
-    <Compile Include="Migrations\201606051800068_Initial.cs" />
-    <Compile Include="Migrations\201606051800068_Initial.Designer.cs">
-      <DependentUpon>201606051800068_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201606051822127_Initial.cs" />
+    <Compile Include="Migrations\201606051822127_Initial.Designer.cs">
+      <DependentUpon>201606051822127_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606051836530_FixedLengthConversationId.cs" />
+    <Compile Include="Migrations\201606051836530_FixedLengthConversationId.Designer.cs">
+      <DependentUpon>201606051836530_FixedLengthConversationId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606051838543_FixedLengthConversationId2.cs" />
+    <Compile Include="Migrations\201606051838543_FixedLengthConversationId2.Designer.cs">
+      <DependentUpon>201606051838543_FixedLengthConversationId2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Dimensions\Channel.cs" />
@@ -90,14 +98,20 @@
     <Compile Include="Repositories\IDWHRepository.cs" />
     <Compile Include="Seed\DateSeed.cs" />
     <Compile Include="Seed\ISeed.cs" />
-    <Compile Include="Seed\MessageTypeSeed.cs" />
+    <Compile Include="Seed\MessageSourceSeed.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201606051800068_Initial.resx">
-      <DependentUpon>201606051800068_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201606051822127_Initial.resx">
+      <DependentUpon>201606051822127_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606051836530_FixedLengthConversationId.resx">
+      <DependentUpon>201606051836530_FixedLengthConversationId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606051838543_FixedLengthConversationId2.resx">
+      <DependentUpon>201606051838543_FixedLengthConversationId2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

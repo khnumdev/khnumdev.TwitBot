@@ -12,7 +12,7 @@
         {
             var dateList = new List<Date>();
 
-            var currentDate = new DateTime(2016, 6, 1);
+            var currentDate = new DateTime(2016, 5, 1);
             var endDate = new DateTime(2020, 12, 31);
 
             Date date = null;

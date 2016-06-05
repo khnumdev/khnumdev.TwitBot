@@ -7,13 +7,13 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Initial : IMigrationMetadata
+    public sealed partial class FixedLengthConversationId : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(FixedLengthConversationId));
         
         string IMigrationMetadata.Id
         {
-            get { return "201606051800068_Initial"; }
+            get { return "201606051836530_FixedLengthConversationId"; }
         }
         
         string IMigrationMetadata.Source
