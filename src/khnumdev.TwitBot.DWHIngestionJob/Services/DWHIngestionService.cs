@@ -64,14 +64,14 @@
                 ChannelId = channelId,
                 ConversationTrackId = conversationId,
                 DateId = DateHelper.GetKeyFromDate(chat.ResponseTime),
-                FromUserId = userFromId,
+                FromUserId = userToId,
                 MessageId = responseMessageId,
                 MessageTypeId = messageTypeId,
                 MessageSourceId = 2,
-                ToUserId = userToId
+                ToUserId = userFromId
             };
 
-            await _dwhRepository.AddFactAsync(requestMessage);
+            await _dwhRepository.AddFactAsync(requestConversation);
             await _dwhRepository.AddFactAsync(responseConversation);
         }
 
