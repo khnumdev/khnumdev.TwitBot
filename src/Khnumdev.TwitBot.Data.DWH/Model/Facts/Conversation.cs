@@ -7,7 +7,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    class Conversation
+    public class Conversation
     {
         public int Id { get; set; }
 
@@ -35,9 +35,13 @@
 
         public MessageType MessageTye { get; set; }
 
-        public int UserId { get; set; }
+        public int FromUserId { get; set; }
 
-        public User User { get; set; }
+        public User FromUser { get; set; }
+
+        public int ToUserId { get; set; }
+
+        public User ToUser { get; set; }
 
         public float? Sentiment { get; set; }
     }

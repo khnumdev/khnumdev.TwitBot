@@ -18,24 +18,27 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
                         MessageId = c.Int(nullable: false),
                         MessageSourceId = c.Int(nullable: false),
                         MessageTypeId = c.Int(nullable: false),
-                        UserId = c.Int(nullable: false),
+                        FromUserId = c.Int(nullable: false),
+                        ToUserId = c.Int(nullable: false),
                         Sentiment = c.Single(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("DWH.DimChannel", t => t.ChannelId, cascadeDelete: true)
                 .ForeignKey("DWH.DimConversation", t => t.ConversationTrackId, cascadeDelete: true)
                 .ForeignKey("DWH.DimDate", t => t.DateId, cascadeDelete: true)
+                .ForeignKey("DWH.DimUser", t => t.FromUserId)
                 .ForeignKey("DWH.DimMessage", t => t.MessageId, cascadeDelete: true)
                 .ForeignKey("DWH.DimMessageSource", t => t.MessageSourceId, cascadeDelete: true)
                 .ForeignKey("DWH.DimMessageType", t => t.MessageTypeId, cascadeDelete: true)
-                .ForeignKey("DWH.DimUser", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("DWH.DimUser", t => t.ToUserId)
                 .Index(t => t.ChannelId)
                 .Index(t => t.ConversationTrackId)
                 .Index(t => t.DateId)
                 .Index(t => t.MessageId)
                 .Index(t => t.MessageSourceId)
                 .Index(t => t.MessageTypeId)
-                .Index(t => t.UserId);
+                .Index(t => t.FromUserId)
+                .Index(t => t.ToUserId);
             
             CreateTable(
                 "DWH.DimChannel",
@@ -72,6 +75,15 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "DWH.DimUser",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Name = c.String(maxLength: 50),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "DWH.DimMessage",
                 c => new
                     {
@@ -104,15 +116,6 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "DWH.DimUser",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(maxLength: 50),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
                 "DWH.FactWord",
                 c => new
                     {
@@ -123,24 +126,27 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
                         MessageId = c.Int(nullable: false),
                         MessageSourceId = c.Int(nullable: false),
                         MessageTypeId = c.Int(nullable: false),
-                        UserId = c.Int(nullable: false),
+                        FromUserId = c.Int(nullable: false),
+                        ToUserId = c.Int(nullable: false),
                         Content = c.String(maxLength: 20),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("DWH.DimChannel", t => t.ChannelId, cascadeDelete: true)
                 .ForeignKey("DWH.DimConversation", t => t.ConversationTrackId, cascadeDelete: true)
                 .ForeignKey("DWH.DimDate", t => t.DateId, cascadeDelete: true)
+                .ForeignKey("DWH.DimUser", t => t.FromUserId)
                 .ForeignKey("DWH.DimMessage", t => t.MessageId, cascadeDelete: true)
                 .ForeignKey("DWH.DimMessageSource", t => t.MessageSourceId, cascadeDelete: true)
                 .ForeignKey("DWH.DimMessageType", t => t.MessageTypeId, cascadeDelete: true)
-                .ForeignKey("DWH.DimUser", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("DWH.DimUser", t => t.ToUserId)
                 .Index(t => t.ChannelId)
                 .Index(t => t.ConversationTrackId)
                 .Index(t => t.DateId)
                 .Index(t => t.MessageId)
                 .Index(t => t.MessageSourceId)
                 .Index(t => t.MessageTypeId)
-                .Index(t => t.UserId);
+                .Index(t => t.FromUserId)
+                .Index(t => t.ToUserId);
             
             CreateTable(
                 "DWH.DimLanguage",
@@ -155,28 +161,32 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
         
         public override void Down()
         {
-            DropForeignKey("DWH.FactWord", "UserId", "DWH.DimUser");
+            DropForeignKey("DWH.FactWord", "ToUserId", "DWH.DimUser");
             DropForeignKey("DWH.FactWord", "MessageTypeId", "DWH.DimMessageType");
             DropForeignKey("DWH.FactWord", "MessageSourceId", "DWH.DimMessageSource");
             DropForeignKey("DWH.FactWord", "MessageId", "DWH.DimMessage");
+            DropForeignKey("DWH.FactWord", "FromUserId", "DWH.DimUser");
             DropForeignKey("DWH.FactWord", "DateId", "DWH.DimDate");
             DropForeignKey("DWH.FactWord", "ConversationTrackId", "DWH.DimConversation");
             DropForeignKey("DWH.FactWord", "ChannelId", "DWH.DimChannel");
-            DropForeignKey("DWH.FactUser", "UserId", "DWH.DimUser");
+            DropForeignKey("DWH.FactUser", "ToUserId", "DWH.DimUser");
             DropForeignKey("DWH.FactUser", "MessageTypeId", "DWH.DimMessageType");
             DropForeignKey("DWH.FactUser", "MessageSourceId", "DWH.DimMessageSource");
             DropForeignKey("DWH.FactUser", "MessageId", "DWH.DimMessage");
+            DropForeignKey("DWH.FactUser", "FromUserId", "DWH.DimUser");
             DropForeignKey("DWH.FactUser", "DateId", "DWH.DimDate");
             DropForeignKey("DWH.FactUser", "ConversationTrackId", "DWH.DimConversation");
             DropForeignKey("DWH.FactUser", "ChannelId", "DWH.DimChannel");
-            DropIndex("DWH.FactWord", new[] { "UserId" });
+            DropIndex("DWH.FactWord", new[] { "ToUserId" });
+            DropIndex("DWH.FactWord", new[] { "FromUserId" });
             DropIndex("DWH.FactWord", new[] { "MessageTypeId" });
             DropIndex("DWH.FactWord", new[] { "MessageSourceId" });
             DropIndex("DWH.FactWord", new[] { "MessageId" });
             DropIndex("DWH.FactWord", new[] { "DateId" });
             DropIndex("DWH.FactWord", new[] { "ConversationTrackId" });
             DropIndex("DWH.FactWord", new[] { "ChannelId" });
-            DropIndex("DWH.FactUser", new[] { "UserId" });
+            DropIndex("DWH.FactUser", new[] { "ToUserId" });
+            DropIndex("DWH.FactUser", new[] { "FromUserId" });
             DropIndex("DWH.FactUser", new[] { "MessageTypeId" });
             DropIndex("DWH.FactUser", new[] { "MessageSourceId" });
             DropIndex("DWH.FactUser", new[] { "MessageId" });
@@ -185,10 +195,10 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
             DropIndex("DWH.FactUser", new[] { "ChannelId" });
             DropTable("DWH.DimLanguage");
             DropTable("DWH.FactWord");
-            DropTable("DWH.DimUser");
             DropTable("DWH.DimMessageType");
             DropTable("DWH.DimMessageSource");
             DropTable("DWH.DimMessage");
+            DropTable("DWH.DimUser");
             DropTable("DWH.DimDate");
             DropTable("DWH.DimConversation");
             DropTable("DWH.DimChannel");

@@ -13,7 +13,7 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201606051147322_Initial"; }
+            get { return "201606051800068_Initial"; }
         }
         
         string IMigrationMetadata.Source

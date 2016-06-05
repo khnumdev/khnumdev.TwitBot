@@ -125,6 +125,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Khnumdev.TwitBot.Data.DWH\Khnumdev.TwitBot.Data.DWH.csproj">
+      <Project>{8198a331-2c4a-4416-a36a-719d7355e942}</Project>
+      <Name>Khnumdev.TwitBot.Data.DWH</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Khnumdev.TwitBot.Data\Khnumdev.TwitBot.Data.csproj">
       <Project>{69c69afa-295b-44fb-ad31-36686db5ac9f}</Project>
       <Name>Khnumdev.TwitBot.Data</Name>

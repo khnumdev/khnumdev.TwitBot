@@ -4,6 +4,7 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
     using Seed;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using EntityFramework.BulkInsert.Extensions;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Khnumdev.TwitBot.Data.DWH.DWHContext>
     {
@@ -22,7 +23,11 @@ namespace Khnumdev.TwitBot.Data.DWH.Migrations
             var messageTypes = new MessageTypeSeed().Generate();
             var dates = new DateSeed().Generate();
             context.Set<MessageType>().AddOrUpdate(messageTypes.ToArray());
-            context.Set<Date>().AddOrUpdate(dates.ToArray());
+
+            if (!context.Set<Date>().Any())
+            {
+                context.BulkInsert(dates.ToArray());
+            }
 
             context.SaveChanges();
         }

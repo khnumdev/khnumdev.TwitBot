@@ -1,5 +1,6 @@
 ﻿namespace Khnumdev.TwitBot.Data.DWH.Seed
 {
+    using Helpers;
     using Model.Dimensions;
     using System;
     using System.Collections.Generic;
@@ -21,7 +22,7 @@
                 {
                     CompleteDate = currentDate,
                     Day = (byte)currentDate.Day,
-                    Id = (currentDate.Year * 1000000) + (currentDate.Month * 10000) + (currentDate.Day * 100) + currentDate.Hour,
+                    Id = DateHelper.GetKeyFromDate(currentDate),
                     Month = new DateTime(currentDate.Year, currentDate.Month, 1),
                     MonthName = currentDate.ToString("MMMM", CultureInfo.InvariantCulture),
                     Hour = (byte)currentDate.Hour,

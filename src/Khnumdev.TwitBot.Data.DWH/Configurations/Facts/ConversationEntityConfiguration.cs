@@ -31,9 +31,15 @@
                  .WithMany()
                  .HasForeignKey(i => i.MessageTypeId);
 
-            this.HasRequired(i => i.User)
+            this.HasRequired(i => i.FromUser)
                  .WithMany()
-                 .HasForeignKey(i => i.UserId);
+                 .HasForeignKey(i => i.FromUserId)
+                 .WillCascadeOnDelete(false);
+
+            this.HasRequired(i => i.ToUser)
+               .WithMany()
+               .HasForeignKey(i => i.ToUserId)
+               .WillCascadeOnDelete(false);
 
             this.ToTable("FactUser", "DWH");
         }

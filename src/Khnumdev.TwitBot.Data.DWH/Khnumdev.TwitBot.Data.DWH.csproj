@@ -34,6 +34,14 @@
       <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EntityFramework.BulkInsert, Version=6.0.2.8, Culture=neutral, PublicKeyToken=630a17433349cb76, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.BulkInsert-ef6.6.0.2.8\lib\Net45\EntityFramework.BulkInsert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.MappingAPI, Version=6.0.0.7, Culture=neutral, PublicKeyToken=7ee2e825d201459e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.MappingAPI.6.0.0.7\lib\net45\EntityFramework.MappingAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
@@ -60,14 +68,16 @@
     <Compile Include="Configurations\Facts\ConversationEntityConfiguration.cs" />
     <Compile Include="Configurations\Facts\WordEntityConfiguration.cs" />
     <Compile Include="DWHContext.cs" />
-    <Compile Include="Migrations\201606051147322_Initial.cs" />
-    <Compile Include="Migrations\201606051147322_Initial.Designer.cs">
-      <DependentUpon>201606051147322_Initial.cs</DependentUpon>
+    <Compile Include="Helpers\DateHelper.cs" />
+    <Compile Include="Migrations\201606051800068_Initial.cs" />
+    <Compile Include="Migrations\201606051800068_Initial.Designer.cs">
+      <DependentUpon>201606051800068_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Dimensions\Channel.cs" />
     <Compile Include="Model\Dimensions\ConversationTrack.cs" />
     <Compile Include="Model\Dimensions\Date.cs" />
+    <Compile Include="Model\Dimensions\IDimension.cs" />
     <Compile Include="Model\Dimensions\Language.cs" />
     <Compile Include="Model\Dimensions\Message.cs" />
     <Compile Include="Model\Dimensions\MessageSource.cs" />
@@ -77,6 +87,7 @@
     <Compile Include="Model\Facts\Word.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DWHRepository.cs" />
+    <Compile Include="Repositories\IDWHRepository.cs" />
     <Compile Include="Seed\DateSeed.cs" />
     <Compile Include="Seed\ISeed.cs" />
     <Compile Include="Seed\MessageTypeSeed.cs" />
@@ -85,8 +96,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201606051147322_Initial.resx">
-      <DependentUpon>201606051147322_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201606051800068_Initial.resx">
+      <DependentUpon>201606051800068_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

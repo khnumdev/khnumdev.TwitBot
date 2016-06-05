@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    class ConversationTrack
+    public class ConversationTrack: IDimension
     {
         public int Id { get; set; }
 

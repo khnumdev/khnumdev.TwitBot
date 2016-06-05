@@ -1,6 +1,6 @@
 ﻿namespace Khnumdev.TwitBot.Data.DWH.Model.Dimensions
 {
-    public class User
+    public class User: IDimension
     {
         public int Id { get; set; }
 

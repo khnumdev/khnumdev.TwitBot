@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Khnumdev.TwitBot.Data.DWH.Model.Dimensions
 {
-    class MessageType
+    public class MessageType: IDimension
     {
         public int Id { get; set; }
 

@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    class Channel
+    public class Channel: IDimension
     {
         public int Id { get; set; }
 
