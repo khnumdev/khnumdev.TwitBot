@@ -15,6 +15,9 @@
                 .HasMaxLength(150)
                 .IsUnicode();
 
+            this.Property(i => i.Date)
+                .HasColumnType("datetime2");
+
             this.Property(i => i.ConversationId)
                 .HasMaxLength(75)
                 .IsUnicode();

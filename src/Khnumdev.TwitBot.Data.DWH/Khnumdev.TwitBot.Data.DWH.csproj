@@ -81,6 +81,10 @@
     <Compile Include="Migrations\201606051838543_FixedLengthConversationId2.Designer.cs">
       <DependentUpon>201606051838543_FixedLengthConversationId2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607032203079_UpdateDateTime2InMessage.cs" />
+    <Compile Include="Migrations\201607032203079_UpdateDateTime2InMessage.Designer.cs">
+      <DependentUpon>201607032203079_UpdateDateTime2InMessage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Dimensions\Channel.cs" />
     <Compile Include="Model\Dimensions\ConversationTrack.cs" />
@@ -112,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201606051838543_FixedLengthConversationId2.resx">
       <DependentUpon>201606051838543_FixedLengthConversationId2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607032203079_UpdateDateTime2InMessage.resx">
+      <DependentUpon>201607032203079_UpdateDateTime2InMessage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
