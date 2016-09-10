@@ -60,6 +60,19 @@
             }
         }
 
+        public async Task<int> AddOrRetrieveIdAsync(MessageType entity)
+        {
+            using (var context = new DWHContext())
+            {
+                var existingEntity = await context
+                    .Set<MessageType>()
+                    .Where(i => i.Name == entity.Name)
+                    .SingleOrDefaultAsync();
+
+                return await Save(context, existingEntity, entity);
+            }
+        }
+
         public async Task<int> AddOrRetrieveIdAsync(User entity)
         {
             using (var context = new DWHContext())
@@ -73,6 +86,18 @@
             }
         }
 
+        public async Task<int> AddOrRetrieveIdAsync(SingleWord entity)
+        {
+            using (var context = new DWHContext())
+            {
+                var existingEntity = await context
+                    .Set<SingleWord>()
+                    .Where(i => i.Text == entity.Text)
+                    .SingleOrDefaultAsync();
+
+                return await Save(context, existingEntity, entity);
+            }
+        }
 
         public async Task<int> AddAsync<T>(T entity)
             where T : class, IDimension

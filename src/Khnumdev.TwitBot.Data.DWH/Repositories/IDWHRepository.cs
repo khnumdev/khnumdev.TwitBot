@@ -13,7 +13,11 @@
 
         Task<int> AddOrRetrieveIdAsync(MessageSource entity);
 
+        Task<int> AddOrRetrieveIdAsync(MessageType entity);
+
         Task<int> AddOrRetrieveIdAsync(User entity);
+
+        Task<int> AddOrRetrieveIdAsync(SingleWord entity);
 
         Task<int> AddAsync<T>(T entity)
             where T : class, IDimension;

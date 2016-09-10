@@ -38,6 +38,8 @@
 
         public User ToUser { get; set; }
 
-        public string Content { get; set; }
+        public int WordId { get; set; }
+
+        public Word WordContent { get; set; }
     }
 }

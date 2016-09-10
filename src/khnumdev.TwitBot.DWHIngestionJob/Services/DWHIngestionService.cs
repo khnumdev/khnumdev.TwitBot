@@ -7,9 +7,7 @@
     using Data.Model;
     using Data.Repositories;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     class DWHIngestionService: IDWHIngestionService
@@ -42,7 +40,7 @@
             var sourceLanguageId = await _dwhRepository.AddOrRetrieveIdAsync(sourceLanguage);
             var requestMessageId = await _dwhRepository.AddAsync(requestMessage);
             var responseMessageId = await _dwhRepository.AddAsync(responseMessage);
-            var messageTypeId = await _dwhRepository.AddAsync(messageType);
+            var messageTypeId = await _dwhRepository.AddOrRetrieveIdAsync(messageType);
             var userFromId = await _dwhRepository.AddOrRetrieveIdAsync(userFrom);
             var userToId = await _dwhRepository.AddOrRetrieveIdAsync(userTo);
 
@@ -73,9 +71,44 @@
 
             await _dwhRepository.AddFactAsync(requestConversation);
             await _dwhRepository.AddFactAsync(responseConversation);
+
+            // Words fact table
+            await ProcessWords(chat.Request, channelId, conversationId, chat.RequestTime, userFromId, requestMessageId, 1, messageTypeId, userToId);
+            await ProcessWords(chat.Response, channelId, conversationId, chat.ResponseTime, userToId, responseMessageId, 2, messageTypeId, userFromId);
         }
 
+        async Task ProcessWords(string requestText, int channelId, int conversationTrackId, DateTime messageTime, int fromUserId, int messageId,
+            int messageSourceId, int messageTypeId, int toUserId)
+        {
+            var words = requestText
+                .Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(i => new Data.DWH.Model.Dimensions.SingleWord
+                {
+                    Text = i
+                })
+                .ToList();
 
+            //TODO: Optimize!!!! Use batches instead of getting one by one!
+            foreach (var word in words)
+            {
+                var wordId = await _dwhRepository.AddOrRetrieveIdAsync(word);
+
+                var fact = new Data.DWH.Model.Facts.Word
+                {
+                    ChannelId = channelId,
+                    ConversationTrackId = conversationTrackId,
+                    DateId = DateHelper.GetKeyFromDate(messageTime),
+                    FromUserId = fromUserId,
+                    MessageId = messageId,
+                    MessageSourceId = messageSourceId,
+                    MessageTypeId = messageTypeId,
+                    ToUserId = toUserId,
+                    WordId = wordId
+                };
+
+                await _dwhRepository.AddFactAsync(fact);
+            }
+        }
 
         Channel GetChannelFrom(QueueChat message)
         {

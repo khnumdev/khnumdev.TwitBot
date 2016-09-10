@@ -7,10 +7,6 @@
     {
         public WordEntityConfiguration()
         {
-            this.Property(i => i.Content)
-                .HasMaxLength(20)
-                .IsUnicode();
-
             this.HasRequired(i => i.Channel)
                  .WithMany()
                  .HasForeignKey(i => i.ChannelId);
@@ -44,6 +40,12 @@
                .WithMany()
                .HasForeignKey(i => i.ToUserId)
                .WillCascadeOnDelete(false);
+
+            this.HasRequired(i => i.WordContent)
+              .WithMany()
+               .HasForeignKey(i => i.WordId)
+               .WillCascadeOnDelete(false);
+
 
             this.ToTable("FactWord", "DWH");
         }
