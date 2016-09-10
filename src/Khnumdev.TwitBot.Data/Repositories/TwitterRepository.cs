@@ -102,6 +102,16 @@
             }
         }
 
+        public async Task AddAsync(List<TrendingTopic> trendingTopics)
+        {
+            using (var context = new TwitBotContext())
+            {
+                context.Set<TrendingTopic>().AddRange(trendingTopics);
+               
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task<List<Tweet>> GetPendingTweetsToAnalyzeAsync()
         {
             using (var context = new TwitBotContext())

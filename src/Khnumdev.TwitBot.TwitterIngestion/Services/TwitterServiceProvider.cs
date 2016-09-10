@@ -2,6 +2,7 @@
 {
     using Data.Model;
     using Data.Repositories;
+    using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
@@ -29,6 +30,23 @@
         }
 
         public async Task LoadIntoDatabaseAsync()
+        {
+            await IngestTrendingTopicsAsync();
+            await IngestTweetsAsync();
+        }
+
+        async Task IngestTrendingTopicsAsync()
+        {
+            var trends = _twitterService.ListLocalTrendsFor(CreateListLocalTrendOptions());
+            var trendsInSpain = _twitterService.ListLocalTrendsFor(CreateListLocalTrendOptions(23424950));
+            var trendingTopics = ParseFromTwitterTrends(trends, "Worldwide")
+                .Concat(ParseFromTwitterTrends(trendsInSpain, "Spain"))
+                .ToList();
+
+            await _twitterRepository.AddAsync(trendingTopics);
+        }
+
+        async Task IngestTweetsAsync()
         {
             var userId = long.Parse(ConfigurationManager.AppSettings[USER_ID]);
 
@@ -109,6 +127,32 @@
                 MaxId = lastId,
                 SinceId = sinceId
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="woeid">The Yahoo! Where On Earth ID of the location to return trending information for. Global information is available by using 1 as the WOEID. By default is 1 (global)</param>
+        /// <returns></returns>
+        ListLocalTrendsForOptions CreateListLocalTrendOptions(int woeid = 1)
+        {
+            return new ListLocalTrendsForOptions
+            {
+                Id = woeid
+            };
+        }
+
+        List<TrendingTopic> ParseFromTwitterTrends(TwitterTrends trends, string countryName)
+        {
+            return trends
+                .Select(i => new TrendingTopic
+                {
+                    Text = i.Name,
+                    Date = i.TrendingAsOf,
+                    IsPromoted = i.PromotedContent == "true" ? true : false,
+                    Country = countryName,
+                })
+                .ToList();
         }
     }
 }

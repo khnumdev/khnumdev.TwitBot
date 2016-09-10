@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configurations\TrendingTopicConfiguration.cs" />
     <Compile Include="Configurations\TweetEntityConfiguration.cs" />
     <Compile Include="Configurations\TwitterUserEntityConfiguration.cs" />
     <Compile Include="Migrations\201605230017465_Initial-Migration.cs" />
@@ -99,8 +100,13 @@
     <Compile Include="Migrations\201605291928369_AddReplyField.Designer.cs">
       <DependentUpon>201605291928369_AddReplyField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609101300389_AddTrendingTopic.cs" />
+    <Compile Include="Migrations\201609101300389_AddTrendingTopic.Designer.cs">
+      <DependentUpon>201609101300389_AddTrendingTopic.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\QueueChat.cs" />
+    <Compile Include="Model\TrendingTopic.cs" />
     <Compile Include="Model\Tweet.cs" />
     <Compile Include="Model\TwitterUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605291928369_AddReplyField.resx">
       <DependentUpon>201605291928369_AddReplyField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609101300389_AddTrendingTopic.resx">
+      <DependentUpon>201609101300389_AddTrendingTopic.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

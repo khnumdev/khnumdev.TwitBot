@@ -16,6 +16,8 @@
 
         Task AddAsync(List<Tweet> tweets);
 
+        Task AddAsync(List<TrendingTopic> trendingTopics);
+
         Task<List<Tweet>> GetPendingTweetsToAnalyzeAsync();
 
         Task UpdateAsync(List<Tweet> tweets);
