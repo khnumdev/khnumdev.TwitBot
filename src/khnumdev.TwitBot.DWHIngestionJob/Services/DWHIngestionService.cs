@@ -66,7 +66,8 @@
                 MessageId = responseMessageId,
                 MessageTypeId = messageTypeId,
                 MessageSourceId = 2,
-                ToUserId = userFromId
+                ToUserId = userFromId,
+                Sentiment = chat.SentimentResponse
             };
 
             await _dwhRepository.AddFactAsync(requestConversation);

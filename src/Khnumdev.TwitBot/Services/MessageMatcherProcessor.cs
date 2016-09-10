@@ -25,7 +25,7 @@
             _userId = long.Parse(ConfigurationManager.AppSettings[USER_ID]);
         }
 
-        public async Task<string> ProcessAsync(AnalysisResult result, string input)
+        public async Task<MatchedMessage> ProcessAsync(AnalysisResult result, string input)
         {
             if (_messages == null)
             {
@@ -43,13 +43,20 @@
                 new
                 {
                     Message = SanitizeTweet(i.Text, true),
+                    Sentiment = i.Sentiment,
                     Value = CalculatePharseCoincidence(keyPhrases, i.KeyPhrases)
                 })
                 .GroupBy(i => i.Value, i => i)
                 .OrderByDescending(i => i.Key)
                 .First();
 
-            return messages.ElementAt(random.Next(0, messages.Count() - 1)).Message;
+            var selectedMessage = messages.ElementAt(random.Next(0, messages.Count() - 1));
+
+            return new MatchedMessage
+            {
+                Message = selectedMessage.Message,
+                Sentiment = selectedMessage.Sentiment
+            };
         }
 
         /// <summary>

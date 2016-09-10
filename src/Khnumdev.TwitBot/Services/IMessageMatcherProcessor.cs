@@ -5,6 +5,6 @@
 
     public interface IMessageMatcherProcessor
     {
-        Task<string> ProcessAsync(AnalysisResult result, string input);
+        Task<MatchedMessage> ProcessAsync(AnalysisResult result, string input);
     }
 }

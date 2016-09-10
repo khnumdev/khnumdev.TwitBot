@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Services\IMessageMatcherProcessor.cs" />
+    <Compile Include="Services\MatchedMessage.cs" />
     <Compile Include="Startup\UnityConfig.cs" />
     <Compile Include="Startup\UnityResolver.cs" />
     <Compile Include="Startup\WebApiConfig.cs" />

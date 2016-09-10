@@ -35,5 +35,6 @@
         public float Sentiment { get; set; }
 
         public List<string> KeyPhrases { get; set; }
+        public float? SentimentResponse { get; set; }
     }
 }

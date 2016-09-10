@@ -49,11 +49,12 @@
 
                     var selectedResponse = await _messageMatcherProcessor.ProcessAsync(analysisResult, message.Text);
 
-                    chat.Response = selectedResponse;
+                    chat.Response = selectedResponse.Message;
                     chat.ResponseTime = DateTime.UtcNow;
+                    chat.SentimentResponse = selectedResponse.Sentiment;
 
                     // return our reply to the user
-                    response = message.CreateReplyMessage(selectedResponse);
+                    response = message.CreateReplyMessage(selectedResponse.Message);
                 }
                 else
                 {
