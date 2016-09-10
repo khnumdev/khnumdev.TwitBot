@@ -26,7 +26,7 @@
 
             // Only call to Cognitive API if pending tweets are more than 50
             // This is to reduce the number of calls to the API
-            if (pendingTweets.Count > 50)
+            if (pendingTweets.Count > 5)
             {
                 var requestToAnalyze = pendingTweets
                     .Select(i => i.Text)
