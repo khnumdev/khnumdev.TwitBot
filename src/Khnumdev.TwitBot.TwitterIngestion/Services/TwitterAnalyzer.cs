@@ -50,5 +50,37 @@
                 }
             }
         }
+
+        public async Task AnaylzeTopicAsync()
+        {
+            var pendingTweets = await _twitterRepository.GetTweetsWithoutTopic();
+
+            // Only call to Cognitive API if pending tweets are more than 50
+            // This is to reduce the number of calls to the API
+            if (pendingTweets.Count > 100)
+            {
+                var requestToAnalyze = pendingTweets
+                    .Select(i => i.Text)
+                    .Take(200)
+                    .ToList();
+
+                var analysisResults = await _textAnalyzerService.AnalyzeTopicsAsync(requestToAnalyze);
+
+                foreach (var analysisResult in analysisResults)
+                {
+                    var currentTweet = pendingTweets
+                        .Where(i => i.Text == analysisResult.OriginalText)
+                        .First();
+
+                    //currentTweet.Sentiment = analysisResult.Sentiment;
+                    //currentTweet.KeyPhrases = string.Join(",", analysisResult.KeyPhrases);
+                }
+
+                //if (analysisResults.Any())
+                //{
+                //    await _twitterRepository.UpdateAsync(pendingTweets);
+                //}
+            }
+        }
     }
 }

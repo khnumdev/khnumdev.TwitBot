@@ -10,7 +10,11 @@
 
         Task<List<Tweet>> GetTweetContentFromAsync(long userId);
 
+        Task<List<Tweet>> GetTweetContentAsync();
+
         Task<TwitterUser> GetUserFrom(long userId);
+
+        Task<List<TwitterUser>> GetUsers();
 
         Task AddAsync(TwitterUser user);
 
@@ -20,6 +24,10 @@
 
         Task<List<Tweet>> GetPendingTweetsToAnalyzeAsync();
 
+        Task<List<TrendingTopic>> GetNewTrendingTopics();
+
         Task UpdateAsync(List<Tweet> tweets);
+
+        Task<List<Tweet>> GetTweetsWithoutTopic();
     }
 }

@@ -1,0 +1,465 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminLogin": {
+      "defaultValue": "user",
+      "type": "string"
+    },
+    "adminLoginPassword": {
+      "defaultValue": "Password.123",
+      "type": "securestring"
+    },
+    "twitterConsumerKey": {
+      "type": "string"
+    },
+    "twitterConsumerSecret": {
+      "type": "string"
+    },
+    "twitterToken": {
+      "type": "string"
+    },
+    "twitterTokenSecret": {
+      "type": "string"
+    },
+    "twitterUserId": {
+      "type": "string"
+    },
+    "botId": {
+      "type": "string"
+    },
+    "microsoftAppID": {
+      "type": "string"
+    },
+    "microsoftAppPassword": {
+      "type": "string"
+    },
+    "cognitiveServicesLUISSubscriptionKey": {
+      "type": "string"
+    },
+    "cognitiveServicesLUISAppId": {
+      "type": "string"
+    },
+    "cognitiveServicesLUISSku": {
+      "defaultValue": "S0",
+      "type": "string",
+      "allowedValues": [ "F0", "S0" ]
+    },
+    "cognitiveServicesTextAnalyticsSku": {
+      "defaultValue": "S1",
+      "type": "string",
+      "allowedValues": [ "F0", "S1", "S2", "S3", "S4" ]
+    },
+    "environment": {
+      "defaultValue": "dev",
+      "allowedValues": [ "dev", "test", "" ],
+      "type": "string"
+    }
+  },
+  "variables": {
+    "defaultName": "[concat('twitbot', parameters('environment'))]",
+    "location": "[resourceGroup().location]",
+    "cognitiveServices": {
+      "luisName": "twitbotluis",
+      "textAnalyticsName": "twitbottextanalytics",
+      "location": "westus"
+    },
+    "alerts": {
+      "cpuHighName": "CPUHigh twitbot",
+      "forbiddenRequestName": "ForbiddenRequests twitbot",
+      "longHttpQueueName": "LongHttpQueue twitbot",
+      "serverErrors": "ServerErrors twitbot",
+      "location": "East US"
+    },
+    "appinsightscomponentName": "[concat('appinsightscomponents', variables('defaultName'))]",
+    "databases": {
+      "serverName": "[concat(variables('defaultName'), 'dbserver')]",
+      "dbName": "Twitbot.Core",
+      "dwhName": "Twitbot.DWH",
+      "firewallRuleName": "AllowAllWindowsAzureIps"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "sku": {
+        "name": "[parameters('cognitiveServicesLUISSku')]"
+      },
+      "tags": {
+        "displayName": "LUIS"
+      },
+      "kind": "LUIS",
+      "name": "[variables('cognitiveServices').luisName]",
+      "apiVersion": "2016-02-01-preview",
+      "location": "[variables('cognitiveServices').location]",
+      "properties": {},
+      "resources": [],
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "sku": {
+        "name": "[parameters('cognitiveServicesTextAnalyticsSku')]"
+      },
+      "tags": {
+        "displayName": "Text Analytics"
+      },
+      "kind": "TextAnalytics",
+      "name": "[variables('cognitiveServices').textAnalyticsName]",
+      "apiVersion": "2016-02-01-preview",
+      "location": "[variables('cognitiveServices').location]",
+      "properties": {},
+      "resources": [],
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "kind": "web",
+      "tags": {
+        "displayName": "AppInsights"
+      },
+      "name": "[variables('appinsightscomponentName')]",
+      "apiVersion": "2014-04-01",
+      "location": "Central US",
+      "properties": {
+        "ApplicationId": "[variables('appinsightscomponentName')]"
+      },
+      "resources": [
+        {
+          "type": "microsoft.insights/alertrules",
+          "tags": {
+            "displayName": "Alert Rules - CPU"
+          },
+          "name": "[variables('alerts').cpuHighName]",
+          "apiVersion": "2014-04-01",
+          "location": "[variables('alerts').location]",
+          "properties": {
+            "name": "[variables('alerts').cpuHighName]",
+            "description": "The average CPU is high across all the instances of twitbot",
+            "condition": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+              "dataSource": {
+                "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                "resourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('defaultName'))]",
+                "metricName": "CpuPercentage"
+              },
+              "threshold": 90,
+              "windowSize": "PT15M"
+            },
+            "action": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+              "sendToServiceOwners": true,
+              "customEmails": []
+            }
+          },
+          "resources": [],
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/serverfarms', variables('defaultName'))]",
+            "[resourceId('Microsoft.Insights/components', variables('appinsightscomponentName'))]"
+          ]
+        },
+        {
+          "type": "microsoft.insights/alertrules",
+          "tags": {
+            "displayName": "Alert Rules - Forbidden Request"
+          },
+          "name": "[variables('alerts').forbiddenRequestName]",
+          "apiVersion": "2014-04-01",
+          "location": "[variables('alerts').location]",
+          "properties": {
+            "name": "[variables('alerts').forbiddenRequestName]",
+            "description": "twitbot has some requests that are forbidden, status code 403.",
+            "condition": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+              "dataSource": {
+                "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                "resourceUri": "[resourceId('Microsoft.Web/sites', variables('defaultName'))]",
+                "metricName": "Http403"
+              },
+              "windowSize": "PT5M"
+            },
+            "action": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+              "sendToServiceOwners": true,
+              "customEmails": []
+            }
+          },
+          "resources": [],
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('defaultName'))]",
+            "[resourceId('Microsoft.Insights/components', variables('appinsightscomponentName'))]"
+          ]
+        },
+        {
+          "type": "microsoft.insights/alertrules",
+          "tags": {
+            "displayName": "Alert Rules - Long HTTP Queue"
+          },
+          "name": "[variables('alerts').longHttpQueueName]",
+          "apiVersion": "2014-04-01",
+          "location": "[variables('alerts').location]",
+          "properties": {
+            "name": "[variables('alerts').longHttpQueueName]",
+            "description": "The HTTP queue for the instances of twitbot has a large number of pending requests.",
+            "condition": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+              "dataSource": {
+                "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                "resourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('defaultName'))]",
+                "metricName": "HttpQueueLength"
+              },
+              "threshold": 100,
+              "windowSize": "PT5M"
+            },
+            "action": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+              "sendToServiceOwners": true,
+              "customEmails": []
+            }
+          },
+          "resources": [],
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/serverfarms', variables('defaultName'))]",
+            "[resourceId('Microsoft.Insights/components', variables('appinsightscomponentName'))]"
+          ]
+        },
+        {
+          "type": "microsoft.insights/alertrules",
+          "tags": {
+            "displayName": "Alert Rules - Server Errors"
+          },
+          "name": "[variables('alerts').serverErrors]",
+          "apiVersion": "2014-04-01",
+          "location": "[variables('alerts').location]",
+          "properties": {
+            "name": "[variables('alerts').serverErrors]",
+            "description": "twitbot has some server errors, status code 5xx.",
+            "condition": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+              "dataSource": {
+                "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                "resourceUri": "[resourceId('Microsoft.Web/sites', variables('defaultName'))]",
+                "metricName": "Http5xx"
+              },
+              "windowSize": "PT5M"
+            },
+            "action": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+              "sendToServiceOwners": true,
+              "customEmails": []
+            }
+          },
+          "resources": [],
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('defaultName'))]",
+            "[resourceId('Microsoft.Insights/components', variables('appinsightscomponentName'))]"
+          ]
+        }
+      ],
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Sql/servers",
+      "kind": "v12.0",
+      "tags": {
+        "displayName": "Azure SQL Server"
+      },
+      "name": "[variables('databases').serverName]",
+      "apiVersion": "2014-04-01-preview",
+      "location": "[variables('location')]",
+      "properties": {
+        "administratorLogin": "[parameters('adminLogin')]",
+        "administratorLoginPassword": "[parameters('adminLoginPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Sql/servers/databases",
+          "tags": {
+            "displayName": "Azure SQL Database - DWH"
+          },
+          "kind": "v12.0,user",
+          "name": "[concat(variables('databases').serverName, '/', variables('databases').dwhName)]",
+          "apiVersion": "2014-04-01-preview",
+          "location": "[variables('location')]",
+          "properties": {
+            "edition": "Basic",
+            "collation": "SQL_Latin1_General_CP1_CI_AS",
+            "requestedServiceObjectiveName": "Basic"
+          },
+          "resources": [],
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('databases').serverName)]"
+          ]
+        },
+        {
+          "type": "Microsoft.Sql/servers/databases",
+          "tags": {
+            "displayName": "Azure SQL Database - Core"
+          },
+          "kind": "v12.0,user",
+          "name": "[concat(variables('databases').serverName, '/', variables('databases').dbName)]",
+          "apiVersion": "2014-04-01-preview",
+          "location": "[variables('location')]",
+          "properties": {
+            "edition": "Basic",
+            "collation": "SQL_Latin1_General_CP1_CI_AS",
+            "requestedServiceObjectiveName": "Basic"
+          },
+          "resources": [],
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('databases').serverName)]"
+          ]
+        },
+        {
+          "type": "Microsoft.Sql/servers/firewallRules",
+          "kind": "v12.0",
+          "name": "[concat(variables('databases').serverName, '/', variables('databases').firewallRuleName)]",
+          "apiVersion": "2014-04-01-preview",
+          "location": "[variables('location')]",
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "255.255.255.255"
+          },
+          "resources": [],
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('databases').serverName)]"
+          ]
+        }
+      ],
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "tags": {
+        "displayName": "Storage Account"
+      },
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "Storage",
+      "name": "[variables('defaultName')]",
+      "apiVersion": "2016-01-01",
+      "location": "[variables('location')]",
+      "properties": {},
+      "resources": [],
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "sku": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 0
+      },
+      "tags": {
+        "displayName": "WebApp Server Farm"
+      },
+      "name": "[variables('defaultName')]",
+      "apiVersion": "2015-08-01",
+      "location": "[variables('location')]",
+      "properties": {
+        "name": "[variables('defaultName')]",
+        "numberOfWorkers": 0
+      },
+      "resources": [],
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "name": "[variables('defaultName')]",
+      "apiVersion": "2015-08-01",
+      "location": "[variables('location')]",
+      "tags": {
+        "displayName": "WebApp - TwitBot site"
+      },
+      "properties": {
+        "name": "[variables('defaultName')]",
+        "hostNames": [
+          "[concat(variables('defaultName'),'.azurewebsites.net')]"
+        ],
+        "enabledHostNames": [
+          "[concat(variables('defaultName'),'.azurewebsites.net')]",
+          "[concat(variables('defaultName'),'.scm.azurewebsites.net')]"
+        ],
+        "hostNameSslStates": [
+          {
+            "name": "[concat(variables('defaultName'),'.azurewebsites.net')]",
+            "sslState": 0,
+            "ipBasedSslState": 0
+          },
+          {
+            "name": "[concat(variables('defaultName'),'.scm.azurewebsites.net')]",
+            "sslState": 0,
+            "ipBasedSslState": 0
+          }
+        ],
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('defaultName'))]"
+      },
+      "resources": [
+        {
+          "name": "appsettings",
+          "type": "config",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('defaultName'))]",
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('defaultName'))]"
+          ],
+          "tags": {
+            "displayName": "Application Settings"
+          },
+          "properties": {
+            "TwitterConsumerKey": "[parameters('twitterConsumerKey')]",
+            "TwitterConsumerSecret": "[parameters('twitterConsumerSecret')]",
+            "TwitterToken": "[parameters('twitterToken')]",
+            "TwitterTokenSecret": "[parameters('twitterTokenSecret')]",
+            "TwitterUserId": "[parameters('twitterUserId')]",
+            "BotId": "[parameters('botId')]",
+            "MicrosoftAppID": "[parameters('microsoftAppID')]",
+            "MicrosoftAppPassword": "[parameters('microsoftAppPassword')]",
+            "TextAnalytics": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', variables('cognitiveServices').textAnalyticsName), '2016-02-01-preview').key1]",
+            "CognitiveServicesLUISSubscriptionKey": "[parameters('cognitiveServicesLUISSubscriptionKey')]",
+            "CognitiveServicesLUISAppId": "[parameters('cognitiveServicesLUISAppId')]"
+          }
+        },
+        {
+          "name": "connectionstrings",
+          "type": "config",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('defaultName'))]",
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('defaultName'))]",
+            "[resourceId('Microsoft.CognitiveServices/accounts', variables('cognitiveServices').textAnalyticsName)]"
+          ],
+          "tags": {
+            "displayName": "Connection strings"
+          },
+          "properties": {
+            "AzureWebJobsDashboard": {
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('defaultName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('defaultName')), '2016-01-01').keys[0].value)]",
+              "type": "Custom"
+            },
+            "AzureWebJobsStorage": {
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('defaultName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('defaultName')), '2016-01-01').keys[0].value)]",
+              "type": "Custom"
+            },
+            "DWHContext": {
+              "value": "[concat('Server=tcp:', variables('databases').serverName, '.database.windows.net,1433;Data Source=', variables('databases').serverName, '.database.windows.net;Initial Catalog=', variables('databases').dwhname, ';Persist Security Info=False;User ID=', parameters('adminLogin'), ';Password=', parameters('adminLoginPassword'), ';Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60')]",
+              "type": "SQLAzure"
+            },
+            "TwitBotContext": {
+              "value": "[concat('Server=tcp:', variables('databases').serverName, '.database.windows.net,1433;Data Source=', variables('databases').serverName, '.database.windows.net;Initial Catalog=', variables('databases').dbname, ';Persist Security Info=False;User ID=', parameters('adminLogin'), ';Password=', parameters('adminLoginPassword'), ';Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60')]",
+              "type": "SQLAzure"
+            }
+          }
+        }
+      ],
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('defaultName'))]"
+      ]
+    }
+  ]
+}

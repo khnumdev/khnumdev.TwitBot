@@ -32,7 +32,8 @@
                     .Select(i => new
                     {
                         Text = i.Text,
-                        KeyPhrases = i.KeyPhrases
+                        KeyPhrases = i.KeyPhrases,
+                        Sentiment = i.Sentiment
                     })
                     .ToListAsync();
 
@@ -40,7 +41,33 @@
                     .Select(i => new Tweet
                     {
                         KeyPhrases = i.KeyPhrases,
-                        Text = i.Text
+                        Text = i.Text,
+                        Sentiment = i.Sentiment
+                    })
+                    .ToList();
+            }
+        }
+
+        public async Task<List<Tweet>> GetTweetContentAsync()
+        {
+            using (var context = new TwitBotContext())
+            {
+                var tweets = await context
+                    .Set<Tweet>()
+                    .Select(i => new
+                    {
+                        Text = i.Text,
+                        KeyPhrases = i.KeyPhrases,
+                        Sentiment = i.Sentiment
+                    })
+                    .ToListAsync();
+
+                return tweets
+                    .Select(i => new Tweet
+                    {
+                        KeyPhrases = i.KeyPhrases,
+                        Text = i.Text,
+                        Sentiment = i.Sentiment
                     })
                     .ToList();
             }
@@ -54,6 +81,16 @@
                     .Set<TwitterUser>()
                     .Where(i => i.TwitterId == userId)
                     .SingleOrDefaultAsync();
+            }
+        }
+
+        public async Task<List<TwitterUser>> GetUsers()
+        {
+            using (var context = new TwitBotContext())
+            {
+                return await context
+                    .Set<TwitterUser>()
+                    .ToListAsync();
             }
         }
 
@@ -107,7 +144,7 @@
             using (var context = new TwitBotContext())
             {
                 context.Set<TrendingTopic>().AddRange(trendingTopics);
-               
+
                 await context.SaveChangesAsync();
             }
         }
@@ -136,6 +173,34 @@
                 }
 
                 await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<TrendingTopic>> GetNewTrendingTopics()
+        {
+            var endDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, 0, 0);
+            var initialDate = endDate.AddHours(-1);
+
+            using (var context = new TwitBotContext())
+            {
+                var tweets = await context
+                     .Set<TrendingTopic>()
+                     .Where(i => i.Date >= initialDate && i.Date < endDate)
+                     .ToListAsync();
+
+                return tweets;
+            }
+        }
+
+        public async Task<List<Tweet>> GetTweetsWithoutTopic()
+        {
+            using (var context = new TwitBotContext())
+            {
+                var tweets = await context
+                     .Set<Tweet>()
+                     .ToListAsync();
+
+                return tweets;
             }
         }
     }

@@ -1,26 +1,34 @@
 ﻿namespace Khnumdev.TwitBot.Data.DWH.Repositories
 {
     using Model.Dimensions;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IDWHRepository
     {
-        Task<int> AddOrRetrieveIdAsync(Channel entity);
+        Task UpsertAsync(List<Channel> entities);
 
-        Task<int> AddOrRetrieveIdAsync(ConversationTrack entity);
+        Task UpsertAsync(List<ConversationTrack> entities);
 
-        Task<int> AddOrRetrieveIdAsync(Language entity);
+        Task UpsertAsync(List<Language> entities);
 
-        Task<int> AddOrRetrieveIdAsync(MessageSource entity);
+        Task UpsertAsync(List<MessageSource> entities);
 
-        Task<int> AddOrRetrieveIdAsync(MessageType entity);
+        Task UpsertAsync(List<MessageType> entities);
 
-        Task<int> AddOrRetrieveIdAsync(User entity);
+        Task UpsertAsync(List<User> entities);
 
-        Task<int> AddOrRetrieveIdAsync(SingleWord entity);
+        Task UpsertAsync(List<SingleWord> entities);
+
+        Task UpsertAsync(List<TrendingTopic> entities);
+
+        Task UpsertAsync(List<Geography> entities);
 
         Task<int> AddAsync<T>(T entity)
             where T : class, IDimension;
+
+        Task<List<T>> GetAllAsync<T>()
+           where T : class, IDimension;
 
         Task AddFactAsync<T>(T entity)
           where T : class;

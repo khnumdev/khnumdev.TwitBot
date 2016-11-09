@@ -9,5 +9,7 @@
         Task<AnalysisResult> AnalyzeAsync(string input);
 
         Task<List<AnalysisResult>> AnalyzeAsync(List<string> input);
+
+        Task<List<TopicAnalysisResult>> AnalyzeTopicsAsync(List<string> input);
     }
 }

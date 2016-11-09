@@ -5,6 +5,8 @@
 
     public interface IMessageMatcherProcessor
     {
-        Task<MatchedMessage> ProcessAsync(AnalysisResult result, string input);
+        Task<MatchedMessage> ProcessAsync(string username, AnalysisResult result, string input);
+
+        int CalculatePharseCoincidence(string keyPhrases, string tweetKeyPhrases);
     }
 }

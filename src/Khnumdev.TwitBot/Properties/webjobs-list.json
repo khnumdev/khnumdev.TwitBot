@@ -6,6 +6,9 @@
     },
     {
       "filePath": "../Khnumdev.TwitBot.TwitterIngestion/Khnumdev.TwitBot.TwitterIngestion.csproj"
+    },
+    {
+      "filePath": "../Khnumdev.TwitBot.Sync/Khnumdev.TwitBot.Sync.csproj"
     }
   ]
 }

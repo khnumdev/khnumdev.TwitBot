@@ -5,5 +5,7 @@
     interface ITwitterAnalyzer
     {
         Task CheckPendingTweets();
+
+        Task AnaylzeTopicAsync();
     }
 }

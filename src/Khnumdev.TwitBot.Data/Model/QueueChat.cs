@@ -36,5 +36,8 @@
 
         public List<string> KeyPhrases { get; set; }
         public float? SentimentResponse { get; set; }
+        public string FromId { get; set; }
+        public string ToId { get; set; }
+        public string TopicName { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     using System.Data.Entity;
 
-    class DWHContext : DbContext
+    public class DWHContext : DbContext
     {
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

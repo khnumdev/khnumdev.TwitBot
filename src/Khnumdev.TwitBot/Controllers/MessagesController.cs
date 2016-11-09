@@ -7,6 +7,8 @@
     using Microsoft.Bot.Connector;
     using Services;
     using System;
+    using System.Net;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.Http;
 
@@ -31,97 +33,69 @@
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
-        public async Task<Message> Post([FromBody]Message message)
+        public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            var chat = CreateChatFromMessage(message);
-
-            Message response = null;
-
+            string chatResponse = null;
+            ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
             try
             {
-                if (message.Type == "Message")
+               
+                if (activity.Type == ActivityTypes.Message)
                 {
+                    var chat = CreateChatFromMessage(activity);
                     var analyzer = new TextAnalyzerService();
-                    var analysisResult = await analyzer.AnalyzeAsync(message.Text);
+                    var analysisResult = await analyzer.AnalyzeAsync(activity.Text);
 
                     chat.Sentiment = analysisResult.Sentiment;
                     chat.KeyPhrases = analysisResult.KeyPhrases;
 
-                    var selectedResponse = await _messageMatcherProcessor.ProcessAsync(analysisResult, message.Text);
+                    var selectedResponse = await _messageMatcherProcessor.ProcessAsync(activity.From.Name, analysisResult, activity.Text);
 
                     chat.Response = selectedResponse.Message;
                     chat.ResponseTime = DateTime.UtcNow;
                     chat.SentimentResponse = selectedResponse.Sentiment;
+                    // calculate something for us to return
+                    int length = (activity.Text ?? string.Empty).Length;
 
-                    // return our reply to the user
-                    response = message.CreateReplyMessage(selectedResponse.Message);
+                    chatResponse = chat.Response;
+                    await _chatRepository.QeueChatAsync(chat);
                 }
-                else
-                {
-                    response = HandleSystemMessage(message);
-                }
+
+               
             }
             catch (Exception ex)
             {
-                chat.Error = ex.ToString();
-                response = message.CreateReplyMessage("ough!");
-            }
-            finally
-            {
-                await _chatRepository.QeueChatAsync(chat);
+                chatResponse = ex.ToString();
             }
 
+            // return our reply to the user
+            Activity reply = activity.CreateReply(chatResponse);
+
+          
+            await connector.Conversations.ReplyToActivityAsync(reply);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
         }
 
-        Message HandleSystemMessage(Message message)
-        {
-            if (message.Type == "Ping")
-            {
-                Message reply = message.CreateReplyMessage();
-                reply.Type = "Ping";
-                return reply;
-            }
-            else if (message.Type == "DeleteUserData")
-            {
-                // Implement user deletion here
-                // If we handle user deletion, return a real message
-            }
-            else if (message.Type == "BotAddedToConversation")
-            {
-            }
-            else if (message.Type == "BotRemovedFromConversation")
-            {
-            }
-            else if (message.Type == "UserAddedToConversation")
-            {
-            }
-            else if (message.Type == "UserRemovedFromConversation")
-            {
-            }
-            else if (message.Type == "EndOfConversation")
-            {
-            }
-
-            return null;
-        }
-
-        QueueChat CreateChatFromMessage(Message message)
+        QueueChat CreateChatFromMessage(Activity message)
         {
             return new QueueChat
             {
                 RequestTime = DateTime.UtcNow,
+                FromId = message.From.Id,
                 From = message.From.Name,
-                IsRequestFromBot = message.From.IsBot,
-                RequestAddress = message.From.Address,
+                IsRequestFromBot = true,
+                RequestAddress = message.From.Name,
                 Request = message.Text,
-                To = message.To.Name,
+                ToId = message.Recipient.Id,
+                TopicName = message.TopicName,
+                To = message.Recipient.Name,
                 MessageType = message.Type,
-                SourceLanguage = message.SourceLanguage,
-                DestinationLanguage = message.Language,
-                ConversationId = message.ConversationId,
-                ChannelId = message.From.ChannelId,
-                HashTags = message.Hashtags
+                SourceLanguage = message.Locale,
+                DestinationLanguage = message.Locale,
+                ConversationId = message.Conversation.Id,
+                ChannelId = message.ChannelId,
             };
         }
     }

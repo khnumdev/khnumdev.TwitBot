@@ -11,7 +11,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class TextAnalyzerService: ITextAnalyzerService
+    public class TextAnalyzerService : ITextAnalyzerService
     {
         const string BaseUrl = "https://westus.api.cognitive.microsoft.com/";
 
@@ -90,14 +90,97 @@
             return result;
         }
 
-        async Task<String> CallEndpoint(HttpClient client, string uri, byte[] byteData)
+        public async Task<List<TopicAnalysisResult>> AnalyzeTopicsAsync(List<string> input)
         {
+            var result = new List<TopicAnalysisResult>();
+
+            using (var client = new HttpClient())
+            {
+                string response = default(string);
+
+                client.BaseAddress = new Uri(BaseUrl);
+
+                // Request headers.
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _accountKey);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                Document document = null;
+                var request = new TopicRequest() { Documents = new List<Document>() };
+                for (int i = 1; i <= input.Count; i++)
+                {
+                    document = new Document
+                    {
+                        Id = i.ToString(),
+                        Text = input[i - 1]
+                    };
+
+                    request.Documents.Add(document);
+                }
+
+                var serializedEntity = JsonConvert.SerializeObject(request);
+
+                byte[] byteData = Encoding.UTF8.GetBytes(serializedEntity);
+
+                // Topics
+                var uri = "text/analytics/v2.0/topics";
+                var operationUri = "text/analytics/v2.0/operations/{0}";
+
+                response = await CallEndpoint(client, uri, byteData, operationUri);
+
+                var topicResponse = JsonConvert.DeserializeObject<TopicResponse>(response);
+
+                var indexedTopics = topicResponse
+                    .Topics
+                    .ToDictionary(i => i.Id, i => i);
+
+                result = request.Documents
+                    .Select(i =>
+                    {
+                        var item = new TopicAnalysisResult
+                        {
+                            Distance = topicResponse.TopicAssignments.Single(j => j.DocumentId == i.Id).Distance,
+                            KeyPhrase = indexedTopics[topicResponse.TopicAssignments.Single(j => j.DocumentId == i.Id).TopicId].KeyPhrase,
+                            OriginalText = i.Text
+                        };
+
+                        return item;
+                    })
+                        .ToList();
+            }
+
+            return result;
+        }
+
+        async Task<string> CallEndpoint(HttpClient client, string uri, byte[] byteData, string operationUrl = null)
+        {
+            var result = string.Empty;
+
             using (var content = new ByteArrayContent(byteData))
             {
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = await client.PostAsync(uri, content);
-                return await response.Content.ReadAsStringAsync();
+
+                if (response.Headers.Contains("operation-location"))
+                {
+                    var operationId = response.Headers.GetValues("operation-location").Single();
+                    var operationRequest = string.Format(operationUrl, operationId);
+
+                    do
+                    {
+                        // Request every minute
+                        await Task.Delay(60000);
+
+                        response = await client.GetAsync(operationRequest);
+                        result = await response.Content.ReadAsStringAsync();
+                    } while (result.Contains("\"status\": \"succeded\""));
+                }
+                else
+                {
+                    result = await response.Content.ReadAsStringAsync();
+                }
             }
+
+            return result;
         }
     }
 }

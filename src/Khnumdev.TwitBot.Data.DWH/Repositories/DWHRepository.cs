@@ -1,6 +1,7 @@
 ﻿namespace Khnumdev.TwitBot.Data.DWH.Repositories
 {
     using Model.Dimensions;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -8,96 +9,6 @@
 
     public class DWHRepository : IDWHRepository
     {
-        public async Task<int> AddOrRetrieveIdAsync(Channel entity)
-        {
-            using (var context = new DWHContext())
-            {
-                var existingEntity = await context
-                    .Set<Channel>()
-                    .Where(i => i.Name == entity.Name)
-                    .SingleOrDefaultAsync();
-
-                return await Save(context, existingEntity, entity);
-            }
-        }
-
-        public async Task<int> AddOrRetrieveIdAsync(ConversationTrack entity)
-        {
-            using (var context = new DWHContext())
-            {
-                var existingEntity = await context
-                    .Set<ConversationTrack>()
-                    .Where(i => i.ConversationId == entity.ConversationId)
-                    .SingleOrDefaultAsync();
-
-                return await Save(context, existingEntity, entity);
-            }
-        }
-
-        public async Task<int> AddOrRetrieveIdAsync(Language entity)
-        {
-            using (var context = new DWHContext())
-            {
-                var existingEntity = await context
-                    .Set<Language>()
-                    .Where(i => i.Name == entity.Name)
-                    .SingleOrDefaultAsync();
-
-                return await Save(context, existingEntity, entity);
-            }
-        }
-
-        public async Task<int> AddOrRetrieveIdAsync(MessageSource entity)
-        {
-            using (var context = new DWHContext())
-            {
-                var existingEntity = await context
-                    .Set<MessageSource>()
-                    .Where(i => i.Source == entity.Source)
-                    .SingleOrDefaultAsync();
-
-                return await Save(context, existingEntity, entity);
-            }
-        }
-
-        public async Task<int> AddOrRetrieveIdAsync(MessageType entity)
-        {
-            using (var context = new DWHContext())
-            {
-                var existingEntity = await context
-                    .Set<MessageType>()
-                    .Where(i => i.Name == entity.Name)
-                    .SingleOrDefaultAsync();
-
-                return await Save(context, existingEntity, entity);
-            }
-        }
-
-        public async Task<int> AddOrRetrieveIdAsync(User entity)
-        {
-            using (var context = new DWHContext())
-            {
-                var existingEntity = await context
-                    .Set<User>()
-                    .Where(i => i.Name == entity.Name)
-                    .SingleOrDefaultAsync();
-
-                return await Save(context, existingEntity, entity);
-            }
-        }
-
-        public async Task<int> AddOrRetrieveIdAsync(SingleWord entity)
-        {
-            using (var context = new DWHContext())
-            {
-                var existingEntity = await context
-                    .Set<SingleWord>()
-                    .Where(i => i.Text == entity.Text)
-                    .SingleOrDefaultAsync();
-
-                return await Save(context, existingEntity, entity);
-            }
-        }
 
         public async Task<int> AddAsync<T>(T entity)
             where T : class, IDimension
@@ -139,6 +50,188 @@
             }
 
             return result;
+        }
+
+        public async Task UpsertAsync(List<Channel> entities)
+        {
+            var distinctEntities = entities
+                .Select(i => i.Name)
+                .Distinct()
+                .Select(i => new Channel { Name = i });
+
+            var allEntities = await GetAllAsync<Channel>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.Name == i.Name));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<Channel>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpsertAsync(List<ConversationTrack> entities)
+        {
+            var distinctEntities = entities
+               .Select(i => i.ConversationId)
+               .Distinct()
+               .Select(i => new ConversationTrack { ConversationId = i });
+
+            var allEntities = await GetAllAsync<ConversationTrack>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.ConversationId == i.ConversationId));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<ConversationTrack>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpsertAsync(List<Language> entities)
+        {
+            var distinctEntities = entities
+               .Select(i => i.Name)
+               .Distinct()
+               .Select(i => new Language { Name = i });
+
+            var allEntities = await GetAllAsync<Language>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.Name == i.Name));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<Language>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpsertAsync(List<MessageSource> entities)
+        {
+            var distinctEntities = entities
+               .Select(i => i.Source)
+               .Distinct()
+               .Select(i => new MessageSource { Source = i });
+
+            var allEntities = await GetAllAsync<MessageSource>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.Source == i.Source));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<MessageSource>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpsertAsync(List<MessageType> entities)
+        {
+            var distinctEntities = entities
+                .Select(i => i.Name)
+                .Distinct()
+                .Select(i => new MessageType { Name = i });
+
+            var allEntities = await GetAllAsync<MessageType>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.Name == i.Name));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<MessageType>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpsertAsync(List<User> entities)
+        {
+            var distinctEntities = entities
+               .Select(i => new { i.UserId, i.Name })
+               .Distinct()
+               .Select(i => new User { UserId = i.UserId , Name = i.Name });
+
+            var allEntities = await GetAllAsync<User>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.UserId == i.UserId));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<User>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpsertAsync(List<SingleWord> entities)
+        {
+            var distinctEntities = entities
+               .Select(i => i.Text)
+               .Distinct()
+               .Select(i => new SingleWord { Text = i });
+
+            var allEntities = await GetAllAsync<SingleWord>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.Text == i.Text));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<SingleWord>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpsertAsync(List<TrendingTopic> entities)
+        {
+            var distinctEntities = entities
+               .Select(i => new { i.Name, i.IsPromoted })
+               .Distinct()
+               .Select(i => new TrendingTopic { Name = i.Name, IsPromoted = i.IsPromoted });
+
+            var allEntities = await GetAllAsync<TrendingTopic>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.Name == i.Name ));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<TrendingTopic>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpsertAsync(List<Geography> entities)
+        {
+            var distinctEntities = entities
+               .Select(i => i.Name)
+               .Distinct()
+               .Select(i => new Geography { Name = i });
+
+            var allEntities = await GetAllAsync<Geography>();
+
+            var newEntities = distinctEntities
+                .Where(i => !allEntities.Any(j => j.Name == i.Name));
+
+            using (var context = new DWHContext())
+            {
+                context.Set<Geography>().AddRange(newEntities);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<T>> GetAllAsync<T>()
+            where T : class, IDimension
+        {
+            using (var context = new DWHContext())
+            {
+                return await context
+                    .Set<T>()
+                    .ToListAsync();
+            };
         }
     }
 }

@@ -1,0 +1,9 @@
+﻿{
+  "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
+  "webJobName": "TwitBot-Sync",
+  "startTime": "2016-09-04T00:00:00+01:00",
+  "endTime": null,
+  "jobRecurrenceFrequency": "Hour",
+  "interval": 1,
+  "runMode": "Scheduled"
+}

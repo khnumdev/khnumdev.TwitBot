@@ -12,7 +12,8 @@
             var container = new UnityContainer();
 
             container.RegisterType<IChatRepository, ChatRepository>(new HierarchicalLifetimeManager());
-            container.RegisterType<IDWHRepository, DWHRepository>(new HierarchicalLifetimeManager());
+            container.RegisterType<IStagingRepository, StagingRepository>(new HierarchicalLifetimeManager());
+            container.RegisterType<IConfigurationRepository, ConfigurationRepository>(new HierarchicalLifetimeManager());
             container.RegisterType<IDWHIngestionService, DWHIngestionService>(new HierarchicalLifetimeManager());
 
             return container;

@@ -48,19 +48,37 @@
 
         async Task IngestTweetsAsync()
         {
-            var userId = long.Parse(ConfigurationManager.AppSettings[USER_ID]);
+            List<Data.Model.TwitterUser> twitterUsers = null;
 
-            var twitterUser = await GetUser(userId);
+            twitterUsers = await _twitterRepository
+                .GetUsers();
 
+            if (!twitterUsers.Any())
+            {
+                // If there are no users defined, get the default twitter user setting
+                var userId = long.Parse(ConfigurationManager.AppSettings[USER_ID]);
+
+                var twitterUser = await GetUser(userId);
+                twitterUsers.Add(twitterUser);
+            }
+
+            foreach (var user in twitterUsers)
+            {
+                await LoadTweets(user);
+            }
+        }
+
+        async Task LoadTweets(Data.Model.TwitterUser twitterUser)
+        {
             var lastTweetId = await _twitterRepository
-                .GetLastMessageIdAsync(userId);
+               .GetLastMessageIdAsync(twitterUser.TwitterId);
 
             var result = new List<Data.Model.Tweet>();
 
             var lastTweetIdToFilter = lastTweetId > 0 ? lastTweetId : (long?)null;
 
             IEnumerable<TwitterStatus> tweets = null;
-            tweets = _twitterService.ListTweetsOnUserTimeline(CreateTimeLineOptions(userId, lastTweetIdToFilter, null));
+            tweets = _twitterService.ListTweetsOnUserTimeline(CreateTimeLineOptions(twitterUser.TwitterId, lastTweetIdToFilter, null));
 
             result.AddRange(tweets
                 .Select(i => ParseFromTwitterStatus(twitterUser.Id, i)));
@@ -71,7 +89,7 @@
                 var lastId = tweets
                     .Min(i => i.Id);
 
-                tweets = _twitterService.ListTweetsOnUserTimeline(CreateTimeLineOptions(userId, lastTweetIdToFilter, lastId));
+                tweets = _twitterService.ListTweetsOnUserTimeline(CreateTimeLineOptions(twitterUser.TwitterId, lastTweetIdToFilter, lastId));
 
                 result.AddRange(tweets
                 .Select(i => ParseFromTwitterStatus(twitterUser.Id, i)));
@@ -148,7 +166,7 @@
                 .Select(i => new TrendingTopic
                 {
                     Text = i.Name,
-                    Date = i.TrendingAsOf,
+                    Date = DateTime.UtcNow,
                     IsPromoted = i.PromotedContent == "true" ? true : false,
                     Country = countryName,
                 })

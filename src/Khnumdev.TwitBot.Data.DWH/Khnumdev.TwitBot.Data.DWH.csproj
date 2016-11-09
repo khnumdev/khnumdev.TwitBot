@@ -57,19 +57,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configurations\Configuration\StateEntityConfiguration.cs" />
+    <Compile Include="Configurations\Constants.cs" />
     <Compile Include="Configurations\Dimensions\DateEntityConfiguration.cs" />
     <Compile Include="Configurations\Dimensions\ConversationTrackEntityConfiguration.cs" />
     <Compile Include="Configurations\Dimensions\ChannelEntityConfiguration.cs" />
+    <Compile Include="Configurations\Dimensions\GeographyEntityConfiguration.cs" />
     <Compile Include="Configurations\Dimensions\LanguageEntityConfiguration.cs" />
     <Compile Include="Configurations\Dimensions\MessageEntityConfiguration.cs" />
     <Compile Include="Configurations\Dimensions\MessageSourceEntityConfiguation.cs" />
     <Compile Include="Configurations\Dimensions\MessageTypeEntityConfiguration.cs" />
+    <Compile Include="Configurations\Dimensions\TrendingTopicEntityConfiguration.cs" />
     <Compile Include="Configurations\Dimensions\UserEntityConfiguration.cs" />
     <Compile Include="Configurations\Dimensions\SingleWordEntityConfiguration.cs" />
     <Compile Include="Configurations\Facts\ConversationEntityConfiguration.cs" />
+    <Compile Include="Configurations\Facts\TopicEntityConfiguration.cs" />
     <Compile Include="Configurations\Facts\WordEntityConfiguration.cs" />
+    <Compile Include="Configurations\Staging\RAWMessageConfiguration.cs" />
     <Compile Include="DWHContext.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
+    <Compile Include="Initializer\DatabaseInitializer.cs" />
     <Compile Include="Migrations\201606051822127_Initial.cs" />
     <Compile Include="Migrations\201606051822127_Initial.Designer.cs">
       <DependentUpon>201606051822127_Initial.cs</DependentUpon>
@@ -90,25 +97,59 @@
     <Compile Include="Migrations\201609101724206_FixedFactWord.Designer.cs">
       <DependentUpon>201609101724206_FixedFactWord.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609251912594_AddRAWMessage.cs" />
+    <Compile Include="Migrations\201609251912594_AddRAWMessage.Designer.cs">
+      <DependentUpon>201609251912594_AddRAWMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610011127175_AddConfigurationTable.cs" />
+    <Compile Include="Migrations\201610011127175_AddConfigurationTable.Designer.cs">
+      <DependentUpon>201610011127175_AddConfigurationTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610011434494_UpdateRAWMessages.cs" />
+    <Compile Include="Migrations\201610011434494_UpdateRAWMessages.Designer.cs">
+      <DependentUpon>201610011434494_UpdateRAWMessages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610011709597_AddTrendingTopicDWH.cs" />
+    <Compile Include="Migrations\201610011709597_AddTrendingTopicDWH.Designer.cs">
+      <DependentUpon>201610011709597_AddTrendingTopicDWH.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610011851170_AddGeographyDWH.cs" />
+    <Compile Include="Migrations\201610011851170_AddGeographyDWH.Designer.cs">
+      <DependentUpon>201610011851170_AddGeographyDWH.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610011900135_FixTrendingTopicNameSize.cs" />
+    <Compile Include="Migrations\201610011900135_FixTrendingTopicNameSize.Designer.cs">
+      <DependentUpon>201610011900135_FixTrendingTopicNameSize.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Configuration\State.cs" />
     <Compile Include="Model\Dimensions\Channel.cs" />
     <Compile Include="Model\Dimensions\ConversationTrack.cs" />
     <Compile Include="Model\Dimensions\Date.cs" />
+    <Compile Include="Model\Dimensions\Geography.cs" />
     <Compile Include="Model\Dimensions\IDimension.cs" />
     <Compile Include="Model\Dimensions\Language.cs" />
     <Compile Include="Model\Dimensions\Message.cs" />
     <Compile Include="Model\Dimensions\MessageSource.cs" />
     <Compile Include="Model\Dimensions\MessageType.cs" />
+    <Compile Include="Model\Dimensions\TrendingTopic.cs" />
     <Compile Include="Model\Dimensions\User.cs" />
     <Compile Include="Model\Dimensions\SingleWord.cs" />
     <Compile Include="Model\Facts\Conversation.cs" />
+    <Compile Include="Model\Facts\Topic.cs" />
     <Compile Include="Model\Facts\Word.cs" />
+    <Compile Include="Model\Staging\RAWMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ConfigurationRepository.cs" />
     <Compile Include="Repositories\DWHRepository.cs" />
+    <Compile Include="Repositories\IConfigurationRepository.cs" />
     <Compile Include="Repositories\IDWHRepository.cs" />
+    <Compile Include="Repositories\IStagingRepository.cs" />
+    <Compile Include="Repositories\StagingRepository.cs" />
     <Compile Include="Seed\DateSeed.cs" />
     <Compile Include="Seed\ISeed.cs" />
     <Compile Include="Seed\MessageSourceSeed.cs" />
+    <Compile Include="Seed\SeedGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -128,6 +169,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609101724206_FixedFactWord.resx">
       <DependentUpon>201609101724206_FixedFactWord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609251912594_AddRAWMessage.resx">
+      <DependentUpon>201609251912594_AddRAWMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610011127175_AddConfigurationTable.resx">
+      <DependentUpon>201610011127175_AddConfigurationTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610011434494_UpdateRAWMessages.resx">
+      <DependentUpon>201610011434494_UpdateRAWMessages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610011709597_AddTrendingTopicDWH.resx">
+      <DependentUpon>201610011709597_AddTrendingTopicDWH.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610011851170_AddGeographyDWH.resx">
+      <DependentUpon>201610011851170_AddGeographyDWH.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610011900135_FixTrendingTopicNameSize.resx">
+      <DependentUpon>201610011900135_FixTrendingTopicNameSize.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -17,6 +17,7 @@
 
             await twitterServiceProvider.LoadIntoDatabaseAsync();
             await twitterAnalyzer.CheckPendingTweets();
+            //await twitterAnalyzer.AnaylzeTopicAsync();
         }
     }
 }

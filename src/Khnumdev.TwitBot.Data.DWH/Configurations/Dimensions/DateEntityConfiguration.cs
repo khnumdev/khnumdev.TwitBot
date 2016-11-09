@@ -6,8 +6,6 @@
 
     class DateEntityConfiguration : EntityTypeConfiguration<Date>
     {
-        const string DATE = "datetime2";
-
         public DateEntityConfiguration()
         {
             Property(i => i.Id)
@@ -24,14 +22,14 @@
                .HasMaxLength(20);
 
             Property(p => p.CompleteDate)
-                .HasColumnType(DATE)
+                .HasColumnType(Constants.DATE)
                 .HasColumnName("Date");
 
             Property(p => p.Month)
-               .HasColumnType(DATE);
+               .HasColumnType(Constants.DATE);
 
             Property(p => p.Quarter)
-               .HasColumnType(DATE);
+               .HasColumnType(Constants.DATE);
 
             this.ToTable("DimDate", "DWH");
         }

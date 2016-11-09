@@ -1,0 +1,42 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminLogin": {
+      "value": "user"
+    },
+    "adminLoginPassword": {
+      "value": "Password.123"
+    },
+    "twitterConsumerKey": {
+      "value": ""
+    },
+    "twitterConsumerSecret": {
+      "value": ""
+    },
+    "twitterToken": {
+      "value": ""
+    },
+    "twitterTokenSecret": {
+      "value": ""
+    },
+    "twitterUserId": {
+      "value": ""
+    },
+    "botId": {
+      "value": ""
+    },
+    "microsoftAppID": {
+      "value": ""
+    },
+    "microsoftAppPassword": {
+      "value": ""
+    },
+    "cognitiveServicesLUISSubscriptionKey": {
+      "value": ""
+    },
+    "cognitiveServicesLUISAppId": {
+      "value": ""
+    }
+  }
+}
