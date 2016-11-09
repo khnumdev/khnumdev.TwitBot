@@ -31,7 +31,7 @@ Finally, you can modify or update the way the bot choose the tweet to answer. Ch
 
 Happy coding!!
 
-PD: If you want to know more about this project, check the following post -in spanish- for further information.
+PD: If you want to know more about this project, check the following [post](http://geeks.ms/aperez/2016/11/09/buscando-la-felicidad-con-bot-framework-y-cognitive-services/) -in spanish- for further information.
 
 
 
