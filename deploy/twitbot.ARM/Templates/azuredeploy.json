@@ -406,7 +406,8 @@
           "apiVersion": "2015-08-01",
           "dependsOn": [
             "[resourceId('Microsoft.Web/sites', variables('defaultName'))]",
-            "[resourceId('Microsoft.Storage/storageAccounts', variables('defaultName'))]"
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('defaultName'))]",
+            "[resourceId('Microsoft.CognitiveServices/accounts', variables('cognitiveServices').textAnalyticsName)]"
           ],
           "tags": {
             "displayName": "Application Settings"
@@ -431,8 +432,7 @@
           "apiVersion": "2015-08-01",
           "dependsOn": [
             "[resourceId('Microsoft.Web/sites', variables('defaultName'))]",
-            "[resourceId('Microsoft.Storage/storageAccounts', variables('defaultName'))]",
-            "[resourceId('Microsoft.CognitiveServices/accounts', variables('cognitiveServices').textAnalyticsName)]"
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('defaultName'))]"
           ],
           "tags": {
             "displayName": "Connection strings"
